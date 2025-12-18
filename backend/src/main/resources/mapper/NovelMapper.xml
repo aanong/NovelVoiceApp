@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.app.novelvoice.mapper.NovelMapper">
+    <insert id="insert" parameterType="com.app.novelvoice.entity.Novel" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO novels (title, author, description, cover_url)
+        VALUES (#{title}, #{author}, #{description}, #{coverUrl})
+    </insert>
+
+    <select id="selectAll" resultType="com.app.novelvoice.entity.Novel">
+        SELECT * FROM novels
+    </select>
+
+    <select id="selectById" resultType="com.app.novelvoice.entity.Novel">
+        SELECT * FROM novels WHERE id = #{id}
+    </select>
+</mapper>
