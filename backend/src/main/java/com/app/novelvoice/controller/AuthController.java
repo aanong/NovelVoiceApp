@@ -1,6 +1,8 @@
 package com.app.novelvoice.controller;
 
 import com.app.novelvoice.common.Result;
+import com.app.novelvoice.dto.LoginRequest;
+import com.app.novelvoice.dto.RegisterRequest;
 import com.app.novelvoice.entity.User;
 import com.app.novelvoice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +18,9 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/login")
-    public Result<User> login(@RequestBody Map<String, String> body) {
-        String username = body.get("username");
-        String password = body.get("password");
+    public Result<User> login(@RequestBody LoginRequest request) {
+        String username = request.getUsername();
+        String password = request.getPassword();
         User user = userService.login(username, password);
         if (user != null) {
             return Result.success(user);
@@ -27,10 +29,10 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public Result<User> register(@RequestBody Map<String, String> body) {
-        String username = body.get("username");
-        String password = body.get("password");
-        String nickname = body.get("nickname");
+    public Result<User> register(@RequestBody RegisterRequest request) {
+        String username = request.getUsername();
+        String password = request.getPassword();
+        String nickname = request.getNickname();
         try {
             User user = userService.register(username, password, nickname);
             return Result.success(user);

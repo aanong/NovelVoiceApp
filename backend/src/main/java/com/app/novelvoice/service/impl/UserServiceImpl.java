@@ -5,6 +5,7 @@ import com.app.novelvoice.mapper.UserMapper;
 import com.app.novelvoice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.app.novelvoice.util.PasswordUtil;
 import java.util.Date;
 
 @Service
@@ -16,7 +17,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User login(String username, String password) {
         User user = userMapper.selectByUsername(username);
-        if (user != null && user.getPassword().equals(password)) {
+        if (user != null && PasswordUtil.matches(password, user.getPassword())) {
             return user;
         }
         return null; // Or throw exception
@@ -30,7 +31,7 @@ public class UserServiceImpl implements UserService {
         }
         User user = new User();
         user.setUsername(username);
-        user.setPassword(password); // In production, hash this!
+        user.setPassword(PasswordUtil.hash(password));
         user.setNickname(nickname);
         user.setCreatedAt(new Date());
         userMapper.insert(user);
