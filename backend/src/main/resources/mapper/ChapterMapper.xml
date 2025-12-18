@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.app.novelvoice.mapper.ChapterMapper">
     <insert id="insert" parameterType="com.app.novelvoice.entity.Chapter" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO chapters (novel_id, title, content, chapter_no)
-        VALUES (#{novelId}, #{title}, #{content}, #{chapterNo})
+        INSERT INTO chapters (novel_id, title, content, chapter_no, create_time, update_time, create_by, update_by)
+        VALUES (#{novelId}, #{title}, #{content}, #{chapterNo}, #{createTime}, #{updateTime}, #{createBy}, #{updateBy})
     </insert>
 
     <select id="selectByNovelId" resultType="com.app.novelvoice.entity.Chapter">

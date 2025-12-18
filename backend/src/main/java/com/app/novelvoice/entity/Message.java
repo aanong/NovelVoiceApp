@@ -1,13 +1,14 @@
 package com.app.novelvoice.entity;
 
+import com.app.novelvoice.common.BaseEntity;
 import lombok.Data;
-import java.util.Date;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class Message {
+@EqualsAndHashCode(callSuper = true)
+public class Message extends BaseEntity {
     private Long id;
     private Long senderId;
     private String content;
     private Integer type; // 0: text, 1: image
-    private Date createdAt;
 }

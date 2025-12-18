@@ -52,7 +52,7 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
             msg.setSenderId(senderId);
             msg.setContent(content);
             msg.setType(0); // Text
-            msg.setCreatedAt(new Date());
+            msg.setCreateTime(new Date());
 
             // Persist to DB
             chatService.saveMessage(msg);

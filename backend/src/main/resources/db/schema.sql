@@ -9,7 +9,10 @@ CREATE TABLE `users` (
   `password` varchar(100) NOT NULL COMMENT 'Password',
   `nickname` varchar(50) DEFAULT NULL COMMENT 'Nickname',
   `avatar` varchar(255) DEFAULT NULL COMMENT 'Avatar URL',
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `create_by` varchar(50) DEFAULT NULL,
+  `update_by` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -21,6 +24,10 @@ CREATE TABLE `novels` (
   `author` varchar(50) DEFAULT NULL,
   `description` text,
   `cover_url` varchar(255) DEFAULT NULL,
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `create_by` varchar(50) DEFAULT NULL,
+  `update_by` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -31,6 +38,10 @@ CREATE TABLE `chapters` (
   `title` varchar(100) NOT NULL,
   `content` longtext,
   `chapter_no` int(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `create_by` varchar(50) DEFAULT NULL,
+  `update_by` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_novel_id` (`novel_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -41,7 +52,10 @@ CREATE TABLE `messages` (
   `sender_id` bigint(20) NOT NULL,
   `content` text,
   `type` int(11) DEFAULT '0' COMMENT '0:text, 1:image',
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `create_by` varchar(50) DEFAULT NULL,
+  `update_by` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_sender_id` (`sender_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

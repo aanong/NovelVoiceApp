@@ -1,14 +1,15 @@
 package com.app.novelvoice.entity;
 
+import com.app.novelvoice.common.BaseEntity;
 import lombok.Data;
-import java.util.Date;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class User {
+@EqualsAndHashCode(callSuper = true)
+public class User extends BaseEntity {
     private Long id;
     private String username;
     private String password;
     private String nickname;
     private String avatar;
-    private Date createdAt;
 }

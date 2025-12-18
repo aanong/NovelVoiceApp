@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.app.novelvoice.mapper.MessageMapper">
     <insert id="insert" parameterType="com.app.novelvoice.entity.Message" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO messages (sender_id, content, type, created_at)
-        VALUES (#{senderId}, #{content}, #{type}, #{createdAt})
+        INSERT INTO messages (sender_id, content, type, create_time, update_time, create_by, update_by)
+        VALUES (#{senderId}, #{content}, #{type}, #{createTime}, #{updateTime}, #{createBy}, #{updateBy})
     </insert>
 
     <select id="selectAll" resultType="com.app.novelvoice.entity.Message">
-        SELECT * FROM messages ORDER BY created_at ASC
+        SELECT * FROM messages ORDER BY create_time ASC
     </select>
 </mapper>

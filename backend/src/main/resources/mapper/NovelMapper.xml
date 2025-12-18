@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.app.novelvoice.mapper.NovelMapper">
     <insert id="insert" parameterType="com.app.novelvoice.entity.Novel" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO novels (title, author, description, cover_url)
-        VALUES (#{title}, #{author}, #{description}, #{coverUrl})
+        INSERT INTO novels (title, author, description, cover_url, create_time, update_time, create_by, update_by)
+        VALUES (#{title}, #{author}, #{description}, #{coverUrl}, #{createTime}, #{updateTime}, #{createBy}, #{updateBy})
     </insert>
 
     <select id="selectAll" resultType="com.app.novelvoice.entity.Novel">
