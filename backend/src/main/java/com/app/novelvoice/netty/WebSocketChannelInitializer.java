@@ -20,7 +20,8 @@ public class WebSocketChannelInitializer extends ChannelInitializer<SocketChanne
         ch.pipeline().addLast("http-codec", new HttpServerCodec());
         ch.pipeline().addLast("aggregator", new HttpObjectAggregator(65536));
         ch.pipeline().addLast("http-chunked", new ChunkedWriteHandler());
-        ch.pipeline().addLast("websocket-handler", new WebSocketServerProtocolHandler("/ws"));
+        ch.pipeline().addLast("websocket-handler", new WebSocketServerProtocolHandler("/ws", null, true, 65536));
+        ch.pipeline().addLast("proto-codec", new WebSocketProtobufCodec());
         ch.pipeline().addLast("handler", chatHandler);
     }
 }

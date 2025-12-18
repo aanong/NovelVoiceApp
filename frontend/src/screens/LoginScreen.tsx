@@ -8,17 +8,11 @@ const LoginScreen = ({ navigation }: any) => {
 
     const handleLogin = async () => {
         try {
-            const res = await api.post('/auth/login', { username, password });
-            if (res.data.code === 200) {
-                // Save user info globally if needed (Context/Redux)
-                const user = res.data.data;
-                Alert.alert('Success', `Welcome ${user.nickname}`);
-                navigation.replace('NovelList', { user });
-            } else {
-                Alert.alert('Error', res.data.msg);
-            }
+            const user = await api.post('/auth/login', { username, password });
+            Alert.alert('Success', `Welcome ${user.nickname}`);
+            navigation.replace('NovelList', { user });
         } catch (error: any) {
-            Alert.alert('Error', error.response?.data?.msg || 'Login failed');
+            Alert.alert('Error', error.message || 'Login failed');
         }
     };
 

@@ -17,12 +17,10 @@ const NovelListScreen = ({ navigation, route }: any) => {
 
     const fetchNovels = async () => {
         try {
-            const res = await api.get('/novels/list');
-            if (res.data.code === 200) {
-                setNovels(res.data.data);
-            }
+            const data = await api.get('/novels/list');
+            setNovels(data);
         } catch (error) {
-            console.error(error);
+            console.error('Fetch novels failed:', error);
         }
     };
 

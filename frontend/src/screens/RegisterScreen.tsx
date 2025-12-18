@@ -9,15 +9,11 @@ const RegisterScreen = ({ navigation }: any) => {
 
     const handleRegister = async () => {
         try {
-            const res = await api.post('/auth/register', { username, password, nickname });
-            if (res.data.code === 200) {
-                Alert.alert('Success', 'Registered successfully');
-                navigation.goBack();
-            } else {
-                Alert.alert('Error', res.data.msg);
-            }
+            await api.post('/auth/register', { username, password, nickname });
+            Alert.alert('Success', 'Registered successfully');
+            navigation.goBack();
         } catch (error: any) {
-            Alert.alert('Error', error.response?.data?.msg || 'Registration failed');
+            Alert.alert('Error', error.message || 'Registration failed');
         }
     };
 

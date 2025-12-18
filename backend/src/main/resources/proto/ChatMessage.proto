@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package com.app.novelvoice.netty.proto;
+
+option java_package = "com.app.novelvoice.netty.proto";
+option java_multiple_files = true;
+
+message ChatMessage {
+    int64 sender_id = 1;
+    string content = 2;
+    int32 type = 3;
+    string timestamp = 4;
+}

@@ -2,6 +2,23 @@ import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, TextInput, Button, FlatList, StyleSheet } from 'react-native';
 import { WS_URL } from '../services/api';
 import api from '../services/api';
+import * as protobuf from 'protobufjs';
+import { Buffer } from 'buffer';
+
+// Protobuf setup
+const protoRoot = protobuf.Root.fromJSON({
+    nested: {
+        ChatMessage: {
+            fields: {
+                senderId: { type: "int64", id: 1 },
+                content: { type: "string", id: 2 },
+                type: { type: "int32", id: 3 },
+                timestamp: { type: "string", id: 4 }
+            }
+        }
+    }
+});
+const ChatMessage = protoRoot.lookupType("ChatMessage");
 
 const ChatScreen = ({ route }: any) => {
     const { user } = route.params;
@@ -11,21 +28,32 @@ const ChatScreen = ({ route }: any) => {
 
     useEffect(() => {
         fetchHistory();
+
         // Connect WebSocket
         ws.current = new WebSocket(WS_URL);
+        ws.current.binaryType = 'arraybuffer'; // Crucial for Protobuf
+
         ws.current.onopen = () => {
             console.log('Connected to Chat Server');
         };
+
         ws.current.onmessage = (e) => {
             try {
-                const msg = JSON.parse(e.data);
+                const uint8Array = new Uint8Array(e.data);
+                const decoded = ChatMessage.decode(uint8Array);
+                const msg = ChatMessage.toObject(decoded, {
+                    longs: String, // Treat int64 as string to avoid precision issues
+                    enums: String,
+                    bytes: String,
+                });
                 setMessages((prev) => [...prev, msg]);
             } catch (err) {
-                console.error('Parse error', err);
+                console.error('Decode error', err);
             }
         };
+
         ws.current.onclose = () => {
-            console.log('Valid WebSocket Disconnected');
+            console.log('WebSocket Disconnected');
         };
 
         return () => {
@@ -35,13 +63,10 @@ const ChatScreen = ({ route }: any) => {
 
     const fetchHistory = async () => {
         try {
-            // Assume API endpoint exists for history if needed, but for now relying on WS or initial fetch
-            const res = await api.get('/chat/history');
-            if (res.data.code === 200) {
-                setMessages(res.data.data);
-            }
+            const data = await api.get('/chat/history');
+            setMessages(data);
         } catch (e) {
-            console.error(e);
+            console.error('Fetch history failed:', e);
         }
     };
 
@@ -49,10 +74,19 @@ const ChatScreen = ({ route }: any) => {
         if (inputText.trim() && ws.current) {
             const payload = {
                 senderId: user.id,
-                content: inputText
+                content: inputText,
+                type: 0,
+                timestamp: new Date().toISOString()
             };
-            ws.current.send(JSON.stringify(payload));
-            setInputText('');
+
+            try {
+                const message = ChatMessage.create(payload);
+                const buffer = ChatMessage.encode(message).finish();
+                ws.current.send(buffer);
+                setInputText('');
+            } catch (e) {
+                console.error('Send error', e);
+            }
         }
     };
 
@@ -62,7 +96,8 @@ const ChatScreen = ({ route }: any) => {
                 data={messages}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
-                    <View style={[styles.msgContainer, item.senderId === user.id ? styles.me : styles.them]}>
+                    <View style={[styles.msgContainer, item.senderId.toString() === user.id.toString() ? styles.me : styles.them]}>
+                        <Text style={styles.sender}>{item.senderId.toString() === user.id.toString() ? 'Me' : `User ${item.senderId}`}</Text>
                         <Text style={styles.msgText}>{item.content}</Text>
                     </View>
                 )}
@@ -85,6 +120,7 @@ const styles = StyleSheet.create({
     msgContainer: { padding: 10, borderRadius: 5, marginVertical: 5, maxWidth: '80%' },
     me: { alignSelf: 'flex-end', backgroundColor: '#DCF8C6' },
     them: { alignSelf: 'flex-start', backgroundColor: '#fff', borderColor: '#eee', borderWidth: 1 },
+    sender: { fontSize: 12, color: '#666', marginBottom: 2 },
     msgText: { fontSize: 16 },
     inputContainer: { flexDirection: 'row', alignItems: 'center', marginTop: 10 },
     input: { flex: 1, borderWidth: 1, borderColor: '#ccc', borderRadius: 5, padding: 10, marginRight: 10 },

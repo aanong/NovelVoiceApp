@@ -10,4 +10,20 @@ const api = axios.create({
     timeout: 10000,
 });
 
+// Response interceptor
+api.interceptors.response.use(
+    (response) => {
+        const res = response.data;
+        // If code is 200, it's successful, return the data part
+        if (res.code === 200) {
+            return res.data;
+        }
+        // Otherwise, reject with the message from backend
+        return Promise.reject(new Error(res.msg || 'Error'));
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
 export default api;

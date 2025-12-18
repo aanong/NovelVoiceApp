@@ -24,30 +24,26 @@ const NovelReaderScreen = ({ route }: any) => {
 
     const fetchChapters = async () => {
         try {
-            const res = await api.get(`/novels/${novelId}/chapters`);
-            if (res.data.code === 200) {
-                setChapters(res.data.data);
-                if (res.data.data.length > 0) {
-                    loadChapterContent(res.data.data[0].id);
-                }
+            const data = await api.get(`/novels/${novelId}/chapters`);
+            setChapters(data);
+            if (data.length > 0) {
+                loadChapterContent(data[0].id);
             }
         } catch (error) {
-            console.error(error);
+            console.error('Fetch chapters failed:', error);
         }
     };
 
     const loadChapterContent = async (chapterId: number) => {
         try {
-            const res = await api.get(`/novels/chapters/${chapterId}`);
-            if (res.data.code === 200) {
-                setContent(res.data.data.content);
-                if (isPlaying) {
-                    Tts.stop();
-                    speak(res.data.data.content);
-                }
+            const data = await api.get(`/novels/chapters/${chapterId}`);
+            setContent(data.content);
+            if (isPlaying) {
+                Tts.stop();
+                speak(data.content);
             }
         } catch (error) {
-            console.error(error);
+            console.error('Load chapter content failed:', error);
         }
     };
 
