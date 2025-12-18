@@ -1,12 +1,9 @@
 package com.app.novelvoice.controller;
 
-import com.app.novelvoice.common.Result;
 import com.app.novelvoice.dto.LoginRequest;
 import com.app.novelvoice.dto.RegisterRequest;
-import com.app.novelvoice.entity.User;
 import com.app.novelvoice.service.UserService;
 import com.app.novelvoice.vo.UserVO;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,33 +15,12 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/login")
-    public Result<UserVO> login(@RequestBody LoginRequest request) {
-        String username = request.getUsername();
-        String password = request.getPassword();
-        User user = userService.login(username, password);
-        if (user == null) {
-            return Result.error(401, "Invalid credentials");
-        }
-        UserVO vo = new UserVO();
-        BeanUtils.copyProperties(user, vo);
-        return Result.success(vo);
+    public UserVO login(@RequestBody LoginRequest request) {
+        return userService.login(request.getUsername(), request.getPassword());
     }
 
     @PostMapping("/register")
-    public Result<UserVO> register(@RequestBody RegisterRequest request) {
-        String username = request.getUsername();
-        String password = request.getPassword();
-        String nickname = request.getNickname();
-        try {
-            User user = userService.register(username, password, nickname);
-            if (user == null) {
-                return Result.error(500, "Registration failed");
-            }
-            UserVO vo = new UserVO();
-            BeanUtils.copyProperties(user, vo);
-            return Result.success(vo);
-        } catch (Exception e) {
-            return Result.error(400, e.getMessage());
-        }
+    public UserVO register(@RequestBody RegisterRequest request) {
+        return userService.register(request.getUsername(), request.getPassword(), request.getNickname());
     }
 }
