@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.app.novelvoice.mapper.UserMapper">
+    
     <insert id="insert" parameterType="com.app.novelvoice.entity.User" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO users (username, password, nickname, avatar, create_time, update_time, create_by, update_by)
-        VALUES (#{username}, #{password}, #{nickname}, #{avatar}, #{createTime}, #{updateTime}, #{createBy}, #{updateBy})
+        INSERT INTO users (username, password, nickname, avatar, token, last_login_time, create_time, update_time, create_by, update_by)
+        VALUES (#{username}, #{password}, #{nickname}, #{avatar}, #{token}, #{lastLoginTime}, #{createTime}, #{updateTime}, #{createBy}, #{updateBy})
     </insert>
+    
+    <update id="update" parameterType="com.app.novelvoice.entity.User">
+        UPDATE users
+        SET nickname = #{nickname},
+            avatar = #{avatar},
+            token = #{token},
+            last_login_time = #{lastLoginTime},
+            update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
 
     <select id="selectByUsername" resultType="com.app.novelvoice.entity.User">
         SELECT * FROM users WHERE username = #{username}
@@ -13,4 +24,18 @@
     <select id="selectById" resultType="com.app.novelvoice.entity.User">
         SELECT * FROM users WHERE id = #{id}
     </select>
+    
+    <select id="selectByToken" resultType="com.app.novelvoice.entity.User">
+        SELECT * FROM users WHERE token = #{token}
+    </select>
+    
+    <select id="selectAll" resultType="com.app.novelvoice.entity.User">
+        SELECT id, username, nickname, avatar, last_login_time, create_time FROM users
+        ORDER BY create_time DESC
+    </select>
+    
+    <update id="updateToken">
+        UPDATE users SET token = #{token}, last_login_time = NOW(), update_time = NOW()
+        WHERE id = #{id}
+    </update>
 </mapper>

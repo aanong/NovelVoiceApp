@@ -6,7 +6,19 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://39.99.238.143:3306/novel_voice_db?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
     username: root
-    password: Clq@20251120 # Uses env var DB_PASSWORD, defaults to 'root' if not set. Change as needed in env.
+    password: ${DB_PASSWORD:Clq@20251120}
+  
+  # 文件上传配置
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 20MB
+  
+  # 静态资源配置
+  web:
+    resources:
+      static-locations: classpath:/static/,file:./uploads/
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
@@ -18,9 +30,21 @@ logging:
   level:
     com.app.novelvoice.mapper: DEBUG
 
+# 文件上传路径配置
+file:
+  upload:
+    path: ./uploads
+    max-size: 10485760
+
 # Gemini AI Configuration
 gemini:
   api:
     key: ${GEMINI_API_KEY:YOUR_GEMINI_API_KEY}
     model: gemini-3-pro-preview
     base-url: https://generativelanguage.googleapis.com/v1beta
+
+# Netty WebSocket 配置
+netty:
+  websocket:
+    port: 8081
+    path: /ws

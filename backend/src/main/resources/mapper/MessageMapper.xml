@@ -1,12 +1,67 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.app.novelvoice.mapper.MessageMapper">
+    
     <insert id="insert" parameterType="com.app.novelvoice.entity.Message" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO messages (sender_id, content, type, create_time, update_time, create_by, update_by)
-        VALUES (#{senderId}, #{content}, #{type}, #{createTime}, #{updateTime}, #{createBy}, #{updateBy})
+        INSERT INTO messages (sender_id, receiver_id, conversation_id, content, type, file_url, file_name, file_size, is_read, create_time, update_time, create_by, update_by)
+        VALUES (#{senderId}, #{receiverId}, #{conversationId}, #{content}, #{type}, #{fileUrl}, #{fileName}, #{fileSize}, #{isRead}, #{createTime}, #{updateTime}, #{createBy}, #{updateBy})
     </insert>
 
+    <!-- 查询所有群聊消息（receiver_id 为空表示群聊） -->
     <select id="selectAll" resultType="com.app.novelvoice.entity.Message">
-        SELECT * FROM messages ORDER BY create_time ASC
+        SELECT * FROM messages 
+        WHERE receiver_id IS NULL 
+        ORDER BY create_time ASC
+    </select>
+    
+    <!-- 查询群聊历史消息（带数量限制） -->
+    <select id="selectRecent" resultType="com.app.novelvoice.entity.Message">
+        SELECT * FROM messages 
+        WHERE receiver_id IS NULL 
+        ORDER BY create_time DESC 
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 查询私聊消息（根据会话ID） -->
+    <select id="selectByConversationId" resultType="com.app.novelvoice.entity.Message">
+        SELECT * FROM messages
+        WHERE conversation_id = #{conversationId}
+        ORDER BY create_time ASC
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 查询两个用户之间的私聊消息 -->
+    <select id="selectByUsers" resultType="com.app.novelvoice.entity.Message">
+        SELECT * FROM messages
+        WHERE (sender_id = #{user1Id} AND receiver_id = #{user2Id})
+           OR (sender_id = #{user2Id} AND receiver_id = #{user1Id})
+        ORDER BY create_time ASC
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 标记消息为已读 -->
+    <update id="markAsRead">
+        UPDATE messages
+        SET is_read = 1, update_time = NOW()
+        WHERE receiver_id = #{userId} AND sender_id = #{senderId} AND is_read = 0
+    </update>
+    
+    <!-- 标记会话中的所有消息为已读 -->
+    <update id="markConversationAsRead">
+        UPDATE messages
+        SET is_read = 1, update_time = NOW()
+        WHERE conversation_id = #{conversationId} AND receiver_id = #{userId} AND is_read = 0
+    </update>
+    
+    <!-- 查询未读消息数量 -->
+    <select id="countUnread" resultType="int">
+        SELECT COUNT(*) FROM messages
+        WHERE receiver_id = #{userId} AND is_read = 0
+    </select>
+    
+    <!-- 查询与某用户的未读消息数量 -->
+    <select id="countUnreadBySender" resultType="int">
+        SELECT COUNT(*) FROM messages
+        WHERE receiver_id = #{userId} AND sender_id = #{senderId} AND is_read = 0
     </select>
 </mapper>

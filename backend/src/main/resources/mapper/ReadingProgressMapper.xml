@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.app.novelvoice.mapper.ReadingProgressMapper">
+    
+    <insert id="insert" parameterType="com.app.novelvoice.entity.ReadingProgress" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO reading_progress (user_id, novel_id, chapter_id, chapter_no, scroll_position, tts_position, last_read_time, create_time, update_time)
+        VALUES (#{userId}, #{novelId}, #{chapterId}, #{chapterNo}, #{scrollPosition}, #{ttsPosition}, #{lastReadTime}, #{createTime}, #{updateTime})
+    </insert>
+    
+    <update id="update" parameterType="com.app.novelvoice.entity.ReadingProgress">
+        UPDATE reading_progress
+        SET chapter_id = #{chapterId},
+            chapter_no = #{chapterNo},
+            scroll_position = #{scrollPosition},
+            tts_position = #{ttsPosition},
+            last_read_time = #{lastReadTime},
+            update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
+    
+    <select id="selectByUserAndNovel" resultType="com.app.novelvoice.entity.ReadingProgress">
+        SELECT * FROM reading_progress
+        WHERE user_id = #{userId} AND novel_id = #{novelId}
+    </select>
+    
+    <select id="selectByUserId" resultType="com.app.novelvoice.entity.ReadingProgress">
+        SELECT * FROM reading_progress
+        WHERE user_id = #{userId}
+        ORDER BY last_read_time DESC
+    </select>
+    
+    <!-- 插入或更新（使用 MySQL ON DUPLICATE KEY UPDATE） -->
+    <insert id="insertOrUpdate" parameterType="com.app.novelvoice.entity.ReadingProgress">
+        INSERT INTO reading_progress (user_id, novel_id, chapter_id, chapter_no, scroll_position, tts_position, last_read_time, create_time, update_time)
+        VALUES (#{userId}, #{novelId}, #{chapterId}, #{chapterNo}, #{scrollPosition}, #{ttsPosition}, #{lastReadTime}, NOW(), NOW())
+        ON DUPLICATE KEY UPDATE
+            chapter_id = #{chapterId},
+            chapter_no = #{chapterNo},
+            scroll_position = #{scrollPosition},
+            tts_position = #{ttsPosition},
+            last_read_time = #{lastReadTime},
+            update_time = NOW()
+    </insert>
+</mapper>

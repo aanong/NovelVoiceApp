@@ -1,31 +1,21 @@
-package com.app.novelvoice.entity;
+package com.app.novelvoice.dto;
 
-import com.app.novelvoice.common.BaseEntity;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
- * 消息实体类
+ * 私聊消息请求对象
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class Message extends BaseEntity {
-    private Long id;
-    
+public class PrivateMessageRequest {
     /**
      * 发送者ID
      */
     private Long senderId;
     
     /**
-     * 接收者ID（NULL表示群聊消息）
+     * 接收者ID
      */
     private Long receiverId;
-    
-    /**
-     * 会话ID（私聊时使用）
-     */
-    private Long conversationId;
     
     /**
      * 消息内容
@@ -51,9 +41,4 @@ public class Message extends BaseEntity {
      * 文件大小（字节）
      */
     private Long fileSize;
-    
-    /**
-     * 是否已读
-     */
-    private Boolean isRead;
 }
