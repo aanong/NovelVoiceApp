@@ -77,3 +77,6 @@ netty:
   websocket:
     port: 8081
     path: /ws
+
+# 导入Excel配置文件
+spring.config.import: optional:classpath:excel-config.yml
