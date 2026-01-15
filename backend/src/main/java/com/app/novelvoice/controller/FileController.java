@@ -1,88 +1,164 @@
 package com.app.novelvoice.controller;
 
-import com.app.novelvoice.common.BusinessException;
-import org.springframework.beans.factory.annotation.Value;
+import com.app.novelvoice.storage.FileStorageResult;
+import com.app.novelvoice.storage.FileStorageService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * 文件上传控制器
+ * 使用策略模式支持多种存储方式（本地、MinIO、阿里云OSS）
+ * 文件直接存储在对象存储中，不存储到数据库
  */
 @RestController
 @RequestMapping("/api/files")
 public class FileController {
 
-    @Value("${file.upload.path:./uploads}")
-    private String uploadPath;
+    /**
+     * 文件存储服务
+     */
+    private final FileStorageService storageService;
 
-    @Value("${file.upload.max-size:10485760}")
-    private long maxFileSize; // 默认 10MB
+    public FileController(FileStorageService storageService) {
+        this.storageService = storageService;
+    }
 
     /**
      * 上传图片
+     * 仅接受图片类型文件
+     * @param file 图片文件
+     * @return 上传结果
      */
     @PostMapping("/upload/image")
     public Map<String, Object> uploadImage(@RequestParam("file") MultipartFile file) {
-        // 验证文件类型
-        String contentType = file.getContentType();
-        if (contentType == null || !contentType.startsWith("image/")) {
-            throw new BusinessException(400, "只支持图片文件");
-        }
-        return saveFile(file, "images");
+        FileStorageResult result = storageService.uploadImage(file);
+        return buildResponse(result);
     }
 
     /**
      * 上传文件
+     * 接受任意类型文件
+     * @param file 文件
+     * @return 上传结果
      */
     @PostMapping("/upload/file")
     public Map<String, Object> uploadFile(@RequestParam("file") MultipartFile file) {
-        // 验证文件大小
-        if (file.getSize() > maxFileSize) {
-            throw new BusinessException(400, "文件大小超过限制");
-        }
-        return saveFile(file, "files");
+        FileStorageResult result = storageService.uploadFile(file);
+        return buildResponse(result);
     }
 
     /**
-     * 保存文件到本地
+     * 上传文件到指定子目录
+     * @param file 文件
+     * @param subDir 子目录名称（如：avatars、covers、chat-images等）
+     * @return 上传结果
      */
-    private Map<String, Object> saveFile(MultipartFile file, String subDir) {
-        try {
-            // 生成唯一文件名
-            String originalFilename = file.getOriginalFilename();
-            String extension = "";
-            if (originalFilename != null && originalFilename.contains(".")) {
-                extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-            }
-            String newFilename = UUID.randomUUID().toString() + extension;
+    @PostMapping("/upload/{subDir}")
+    public Map<String, Object> uploadToDir(@RequestParam("file") MultipartFile file,
+                                           @PathVariable("subDir") String subDir) {
+        FileStorageResult result = storageService.upload(file, subDir);
+        return buildResponse(result);
+    }
 
-            // 创建目录
-            Path dirPath = Paths.get(uploadPath, subDir);
-            if (!Files.exists(dirPath)) {
-                Files.createDirectories(dirPath);
-            }
-
-            // 保存文件
-            Path filePath = dirPath.resolve(newFilename);
-            file.transferTo(filePath.toFile());
-
-            // 返回文件信息
-            Map<String, Object> result = new HashMap<>();
-            result.put("fileName", originalFilename);
-            result.put("fileUrl", "/uploads/" + subDir + "/" + newFilename);
-            result.put("fileSize", file.getSize());
-            return result;
-        } catch (IOException e) {
-            throw new BusinessException(500, "文件上传失败: " + e.getMessage());
+    /**
+     * 上传文件（通用接口）
+     * 支持指定存储类型和子目录
+     * @param file 文件
+     * @param subDir 子目录（默认files）
+     * @param storageType 存储类型（local/minio/aliyun-oss，可选）
+     * @return 上传结果
+     */
+    @PostMapping("/upload")
+    public Map<String, Object> upload(@RequestParam("file") MultipartFile file,
+                                      @RequestParam(value = "subDir", defaultValue = "files") String subDir,
+                                      @RequestParam(value = "storageType", required = false) String storageType) {
+        FileStorageResult result;
+        if (storageType != null && !storageType.isEmpty()) {
+            result = storageService.upload(file, subDir, storageType);
+        } else {
+            result = storageService.upload(file, subDir);
         }
+        return buildResponse(result);
+    }
+
+    /**
+     * 删除文件
+     * @param fileKey 文件Key（存储路径）
+     * @return 删除结果
+     */
+    @DeleteMapping("/delete")
+    public Map<String, Object> deleteFile(@RequestParam("fileKey") String fileKey) {
+        boolean success = storageService.delete(fileKey);
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", success);
+        response.put("fileKey", fileKey);
+        return response;
+    }
+
+    /**
+     * 获取文件预签名URL
+     * 用于临时访问私有文件
+     * @param fileKey 文件Key
+     * @param expireSeconds 过期时间（秒），默认3600秒
+     * @return 预签名URL
+     */
+    @GetMapping("/presigned-url")
+    public Map<String, Object> getPresignedUrl(@RequestParam("fileKey") String fileKey,
+                                               @RequestParam(value = "expireSeconds", defaultValue = "3600") int expireSeconds) {
+        String url = storageService.getPresignedUrl(fileKey, expireSeconds);
+        Map<String, Object> response = new HashMap<>();
+        response.put("url", url);
+        response.put("fileKey", fileKey);
+        response.put("expireSeconds", expireSeconds);
+        return response;
+    }
+
+    /**
+     * 检查文件是否存在
+     * @param fileKey 文件Key
+     * @return 是否存在
+     */
+    @GetMapping("/exists")
+    public Map<String, Object> checkExists(@RequestParam("fileKey") String fileKey) {
+        boolean exists = storageService.exists(fileKey);
+        Map<String, Object> response = new HashMap<>();
+        response.put("exists", exists);
+        response.put("fileKey", fileKey);
+        return response;
+    }
+
+    /**
+     * 获取存储信息
+     * @return 当前存储类型和可用存储类型
+     */
+    @GetMapping("/storage-info")
+    public Map<String, Object> getStorageInfo() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("currentType", storageService.getCurrentStorageType());
+        response.put("availableTypes", storageService.getAvailableStorageTypes());
+        return response;
+    }
+
+    /**
+     * 构建响应结果
+     * @param result 存储结果
+     * @return 响应Map
+     */
+    private Map<String, Object> buildResponse(FileStorageResult result) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("fileName", result.getOriginalFileName());
+        response.put("storedFileName", result.getStoredFileName());
+        response.put("fileUrl", result.getFileUrl());
+        response.put("fileKey", result.getFileKey());
+        response.put("fileSize", result.getFileSize());
+        response.put("contentType", result.getContentType());
+        response.put("storageType", result.getStorageType());
+        if (result.getBucketName() != null) {
+            response.put("bucketName", result.getBucketName());
+        }
+        return response;
     }
 }

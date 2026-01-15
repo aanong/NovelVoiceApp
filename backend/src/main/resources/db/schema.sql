@@ -123,3 +123,4 @@ CREATE TABLE `online_users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='在线用户表';
+
