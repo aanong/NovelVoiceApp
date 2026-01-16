@@ -1,4 +1,4 @@
-package com.app.tool.excel.dto;
+package com.gmrfid.excel.dto;
 
 import lombok.Data;
 
@@ -22,7 +22,7 @@ public class ExcelExportRequest {
     private Integer sheetIndex = 0;
 
     /**
-     * 导出文件名
+     * 导出文件�?
      */
     private String fileName;
 
@@ -42,7 +42,7 @@ public class ExcelExportRequest {
     private boolean includeHeader = true;
 
     /**
-     * 只导出指定字段(为空则导出所有)
+     * 只导出指定字�?为空则导出所�?
      */
     private List<String> includeFields;
 

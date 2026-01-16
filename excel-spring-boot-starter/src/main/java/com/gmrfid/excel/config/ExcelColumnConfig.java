@@ -1,18 +1,18 @@
-package com.app.tool.excel.config;
+package com.gmrfid.excel.config;
 
 import lombok.Data;
 
 import java.util.List;
 
 /**
- * Excel列配置
+ * Excel列配�?
  * 用于定义导入导出时的列映射关系和验证规则
  */
 @Data
 public class ExcelColumnConfig {
 
     /**
-     * 列标题(表头显示名称)
+     * 列标�?表头显示名称)
      */
     private String title;
 
@@ -27,15 +27,15 @@ public class ExcelColumnConfig {
     private String fieldType = "string";
 
     /**
-     * 日期格式(当fieldType为date时使用)
+     * 日期格式(当fieldType为date时使�?
      */
     private String dateFormat = "yyyy-MM-dd";
 
     /**
-     * 验证表达式(SpEL表达式)
+     * 验证表达�?SpEL表达�?
      * 支持: #notBlank(#val), #empty(#val), #lengthLessThan(#val, 64),
      * #options(#val, 'opt1', 'opt2'), #dateFormat(#val, 'yyyy/MM/dd'),
-     * #doubleWithScale(#val, 2), #longGreaterThan(#val, 0) 等
+     * #doubleWithScale(#val, 2), #longGreaterThan(#val, 0) �?
      */
     private String verifyExpression;
 
@@ -50,12 +50,12 @@ public class ExcelColumnConfig {
     private boolean required = false;
 
     /**
-     * 列宽(导出时使用)
+     * 列宽(导出时使�?
      */
     private Integer width = 20;
 
     /**
-     * 列索引(可选,不指定则按顺序)
+     * 列索�?可�?不指定则按顺�?
      */
     private Integer index;
 
@@ -70,7 +70,7 @@ public class ExcelColumnConfig {
     private boolean importable = true;
 
     /**
-     * 字典转换器名称(用于枚举值转换)
+     * 字典转换器名�?用于枚举值转�?
      */
     private String converter;
 }

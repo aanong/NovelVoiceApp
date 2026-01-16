@@ -1,4 +1,4 @@
-package com.app.tool.excel.dto;
+package com.gmrfid.excel.dto;
 
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * Excel导入结果
  * 
- * @param <T> 成功数据的类型
+ * @param <T> 成功数据的类�?
  */
 @Data
 public class ExcelImportResult<T> {
@@ -20,7 +20,7 @@ public class ExcelImportResult<T> {
     private boolean success;
 
     /**
-     * 总行数
+     * 总行�?
      */
     private int totalRows;
 
@@ -40,7 +40,7 @@ public class ExcelImportResult<T> {
     private List<T> successData = new ArrayList<>();
 
     /**
-     * 失败数据列表(包含行号和错误信息)
+     * 失败数据列表(包含行号和错误信�?
      */
     private List<RowError> errors = new ArrayList<>();
 
@@ -55,12 +55,12 @@ public class ExcelImportResult<T> {
     private String message;
 
     /**
-     * 行错误信息
+     * 行错误信�?
      */
     @Data
     public static class RowError {
         /**
-         * 行号(从1开始,含表头)
+         * 行号(�?开�?含表�?
          */
         private int rowIndex;
 
@@ -70,7 +70,7 @@ public class ExcelImportResult<T> {
         private String field;
 
         /**
-         * 错误值
+         * 错误�?
          */
         private Object value;
 
@@ -80,7 +80,7 @@ public class ExcelImportResult<T> {
         private String errorMessage;
 
         /**
-         * 原始行数据
+         * 原始行数�?
          */
         private Map<String, Object> rowData;
 
@@ -128,7 +128,7 @@ public class ExcelImportResult<T> {
         error.setRowData(rowData);
         this.errors.add(error);
         if (rowData != null) {
-            // 添加错误信息到原始数据
+            // 添加错误信息到原始数�?
             rowData.put("_errorMessage", errorMessage);
             this.failedRawData.add(rowData);
         }

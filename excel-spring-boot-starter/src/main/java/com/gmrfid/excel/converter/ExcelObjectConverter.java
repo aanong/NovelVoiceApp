@@ -1,7 +1,7 @@
-package com.app.tool.excel.converter;
+package com.gmrfid.excel.converter;
 
-import com.app.tool.excel.config.ExcelColumnConfig;
-import com.app.tool.excel.config.ExcelSheetConfig;
+import com.gmrfid.excel.config.ExcelColumnConfig;
+import com.gmrfid.excel.config.ExcelSheetConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Excel数据与对象之间的转换器
+ * Excel数据与对象之间的转换�?
  * 支持根据YML配置中的ormClass将Map数据转换为Java对象
  */
 @Slf4j
@@ -24,8 +24,8 @@ public class ExcelObjectConverter {
     /**
      * 将Map数据转换为指定类型的对象
      * 
-     * @param data        Map形式的数据
-     * @param sheetConfig Sheet配置（包含ormClass和列配置）
+     * @param data        Map形式的数�?
+     * @param sheetConfig Sheet配置（包含ormClass和列配置�?
      * @param <T>         目标类型
      * @return 转换后的对象，如果转换失败返回null
      */
@@ -49,35 +49,35 @@ public class ExcelObjectConverter {
                 String fieldName = entry.getKey();
                 Object value = entry.getValue();
 
-                // 跳过内部字段（如_errorMessage）
+                // 跳过内部字段（如_errorMessage�?
                 if (fieldName.startsWith("_")) {
                     continue;
                 }
 
                 try {
                     if (beanWrapper.isWritableProperty(fieldName)) {
-                        // 获取目标属性类型
+                        // 获取目标属性类�?
                         Class<?> propertyType = beanWrapper.getPropertyType(fieldName);
                         // 获取列配置（如果有的话）
                         ExcelColumnConfig columnConfig = fieldConfigMap.get(fieldName);
-                        // 转换值
+                        // 转换�?
                         Object convertedValue = convertValue(value, propertyType, columnConfig);
                         beanWrapper.setPropertyValue(fieldName, convertedValue);
                     }
                 } catch (Exception e) {
-                    log.debug("设置属性 {} 失败: {}", fieldName, e.getMessage());
+                    log.debug("设置属�?{} 失败: {}", fieldName, e.getMessage());
                 }
             }
 
             return (T) instance;
         } catch (Exception e) {
-            log.error("转换对象失败, 目标类: {}", targetClass.getName(), e);
+            log.error("转换对象失败, 目标�? {}", targetClass.getName(), e);
             return null;
         }
     }
 
     /**
-     * 批量转换Map数据为对象列表
+     * 批量转换Map数据为对象列�?
      * 
      * @param dataList    Map数据列表
      * @param sheetConfig Sheet配置
@@ -103,8 +103,8 @@ public class ExcelObjectConverter {
      * 将对象转换为Map
      * 
      * @param obj         要转换的对象
-     * @param sheetConfig Sheet配置（可选，用于确定导出字段）
-     * @return Map形式的数据
+     * @param sheetConfig Sheet配置（可选，用于确定导出字段�?
+     * @return Map形式的数�?
      */
     public Map<String, Object> convertToMap(Object obj, ExcelSheetConfig sheetConfig) {
         if (obj == null) {
@@ -117,7 +117,7 @@ public class ExcelObjectConverter {
             BeanWrapper beanWrapper = new BeanWrapperImpl(obj);
             PropertyDescriptor[] propertyDescriptors = beanWrapper.getPropertyDescriptors();
 
-            // 如果有列配置，只导出配置的字段
+            // 如果有列配置，只导出配置的字�?
             Set<String> allowedFields = getAllowedFields(sheetConfig);
 
             for (PropertyDescriptor pd : propertyDescriptors) {
@@ -137,7 +137,7 @@ public class ExcelObjectConverter {
                     ExcelColumnConfig columnConfig = getColumnConfig(sheetConfig, propertyName);
                     result.put(propertyName, formatValue(value, columnConfig));
                 } catch (Exception e) {
-                    log.debug("读取属性 {} 失败: {}", propertyName, e.getMessage());
+                    log.debug("读取属�?{} 失败: {}", propertyName, e.getMessage());
                 }
             }
         } catch (Exception e) {
@@ -184,7 +184,7 @@ public class ExcelObjectConverter {
     }
 
     /**
-     * 获取允许导出的字段集合
+     * 获取允许导出的字段集�?
      */
     private Set<String> getAllowedFields(ExcelSheetConfig sheetConfig) {
         Set<String> fields = new HashSet<>();
@@ -227,7 +227,7 @@ public class ExcelObjectConverter {
         }
 
         try {
-            // 字符串类型
+            // 字符串类�?
             if (targetType == String.class) {
                 return strValue;
             }
@@ -254,7 +254,7 @@ public class ExcelObjectConverter {
 
             // Boolean类型
             if (targetType == Boolean.class || targetType == boolean.class) {
-                return "是".equals(strValue) || "true".equalsIgnoreCase(strValue) || "1".equals(strValue);
+                return "�?.equals(strValue) || "true".equalsIgnoreCase(strValue) || "1".equals(strValue);
             }
 
             // BigDecimal类型
@@ -293,14 +293,14 @@ public class ExcelObjectConverter {
             return strValue;
 
         } catch (Exception e) {
-            log.debug("类型转换失败: {} -> {}, 值: {}", value.getClass().getSimpleName(),
+            log.debug("类型转换失败: {} -> {}, �? {}", value.getClass().getSimpleName(),
                     targetType.getSimpleName(), strValue);
             return strValue;
         }
     }
 
     /**
-     * 解析日期字符串
+     * 解析日期字符�?
      */
     private Date parseDate(String dateStr, String format) throws ParseException {
         // 尝试多种常见格式
@@ -315,35 +315,35 @@ public class ExcelObjectConverter {
     }
 
     /**
-     * 格式化值用于导出
+     * 格式化值用于导�?
      */
     private Object formatValue(Object value, ExcelColumnConfig columnConfig) {
         if (value == null) {
             return "";
         }
 
-        // 日期格式化
+        // 日期格式�?
         if (value instanceof Date && columnConfig != null && StringUtils.hasText(columnConfig.getDateFormat())) {
             return new SimpleDateFormat(columnConfig.getDateFormat()).format((Date) value);
         }
 
-        // LocalDate格式化
+        // LocalDate格式�?
         if (value instanceof java.time.LocalDate && columnConfig != null
                 && StringUtils.hasText(columnConfig.getDateFormat())) {
             return ((java.time.LocalDate) value).format(
                     java.time.format.DateTimeFormatter.ofPattern(columnConfig.getDateFormat()));
         }
 
-        // LocalDateTime格式化
+        // LocalDateTime格式�?
         if (value instanceof java.time.LocalDateTime && columnConfig != null
                 && StringUtils.hasText(columnConfig.getDateFormat())) {
             return ((java.time.LocalDateTime) value).format(
                     java.time.format.DateTimeFormatter.ofPattern(columnConfig.getDateFormat()));
         }
 
-        // 布尔值转换
+        // 布尔值转�?
         if (value instanceof Boolean) {
-            return (Boolean) value ? "是" : "否";
+            return (Boolean) value ? "�? : "�?;
         }
 
         return value;

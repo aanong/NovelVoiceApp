@@ -1,4 +1,4 @@
-package com.app.tool.excel.config;
+package com.gmrfid.excel.config;
 
 import lombok.Data;
 
@@ -42,7 +42,7 @@ public class ExcelTaskConfig {
     private Integer maxParallelRunNum = 10;
 
     /**
-     * 导出时的文件名模板(支持日期占位符)
+     * 导出时的文件名模�?支持日期占位�?
      */
     private String exportFileName;
 

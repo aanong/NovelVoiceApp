@@ -1,20 +1,20 @@
-package com.app.tool.excel.listener;
+package com.gmrfid.excel.listener;
 
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.excel.metadata.data.ReadCellData;
-import com.app.tool.excel.config.ExcelColumnConfig;
-import com.app.tool.excel.config.ExcelSheetConfig;
-import com.app.tool.excel.converter.ExcelObjectConverter;
-import com.app.tool.excel.dto.ExcelImportResult;
-import com.app.tool.excel.validator.ExcelExpressionValidator;
+import com.gmrfid.excel.config.ExcelColumnConfig;
+import com.gmrfid.excel.config.ExcelSheetConfig;
+import com.gmrfid.excel.converter.ExcelObjectConverter;
+import com.gmrfid.excel.dto.ExcelImportResult;
+import com.gmrfid.excel.validator.ExcelExpressionValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
 
 /**
- * 动态Excel读取监听器
+ * 动态Excel读取监听�?
  * 根据YML配置动态读取和验证Excel数据
  * 支持将数据转换为ormClass指定的Java对象
  */
@@ -27,44 +27,44 @@ public class DynamicExcelListener extends AnalysisEventListener<Map<Integer, Str
     // 表达式验证器
     private final ExcelExpressionValidator expressionValidator;
 
-    // 对象转换器(可选)
+    // 对象转换�?可�?
     private final ExcelObjectConverter objectConverter;
 
     // 导入结果(Map形式)
     private final ExcelImportResult<Map<String, Object>> mapResult;
 
-    // 导入结果(类型化形式)
+    // 导入结果(类型化形�?
     private ExcelImportResult<Object> typedResult;
 
-    // 表头映射: 列索引 -> 列配置
+    // 表头映射: 列索�?-> 列配�?
     private final Map<Integer, ExcelColumnConfig> headerMapping = new HashMap<>();
 
-    // 表头标题映射: 列索引 -> 标题
+    // 表头标题映射: 列索�?-> 标题
     private final Map<Integer, String> headerTitles = new HashMap<>();
 
     // 当前行号
     private int currentRow = 0;
 
-    // 批处理大小
+    // 批处理大�?
     private static final int BATCH_SIZE = 1000;
 
-    // 批处理数据(Map形式)
+    // 批处理数�?Map形式)
     private final List<Map<String, Object>> batchData = new ArrayList<>();
 
-    // 批处理数据(类型化形式)
+    // 批处理数�?类型化形�?
     private final List<Object> typedBatchData = new ArrayList<>();
 
-    // 批处理回调
+    // 批处理回�?
     private final BatchCallback batchCallback;
 
     // 类型化批处理回调
     private final TypedBatchCallback<?> typedBatchCallback;
 
-    // 是否启用类型化转换
+    // 是否启用类型化转�?
     private final boolean enableTypedConversion;
 
     /**
-     * 构造函数(Map形式)
+     * 构造函�?Map形式)
      */
     public DynamicExcelListener(ExcelSheetConfig sheetConfig,
             ExcelExpressionValidator expressionValidator,
@@ -73,7 +73,7 @@ public class DynamicExcelListener extends AnalysisEventListener<Map<Integer, Str
     }
 
     /**
-     * 构造函数(支持类型化转换)
+     * 构造函�?支持类型化转�?
      */
     public DynamicExcelListener(ExcelSheetConfig sheetConfig,
             ExcelExpressionValidator expressionValidator,
@@ -83,7 +83,7 @@ public class DynamicExcelListener extends AnalysisEventListener<Map<Integer, Str
     }
 
     /**
-     * 完整构造函数
+     * 完整构造函�?
      */
     public DynamicExcelListener(ExcelSheetConfig sheetConfig,
             ExcelExpressionValidator expressionValidator,
@@ -98,7 +98,7 @@ public class DynamicExcelListener extends AnalysisEventListener<Map<Integer, Str
         this.mapResult = new ExcelImportResult<>();
         this.mapResult.setSuccess(true);
 
-        // 判断是否启用类型化转换
+        // 判断是否启用类型化转�?
         this.enableTypedConversion = objectConverter != null && sheetConfig.hasOrmClass();
         if (enableTypedConversion) {
             this.typedResult = new ExcelImportResult<>();
@@ -121,7 +121,7 @@ public class DynamicExcelListener extends AnalysisEventListener<Map<Integer, Str
             }
         }
 
-        // 解析表头,建立列索引到配置的映射
+        // 解析表头,建立列索引到配置的映�?
         for (Map.Entry<Integer, ReadCellData<?>> entry : headMap.entrySet()) {
             Integer colIndex = entry.getKey();
             String title = entry.getValue().getStringValue();
@@ -145,14 +145,14 @@ public class DynamicExcelListener extends AnalysisEventListener<Map<Integer, Str
             typedResult.setTotalRows(typedResult.getTotalRows() + 1);
         }
 
-        // 检查最大行数限制
+        // 检查最大行数限�?
         if (sheetConfig.getMaxRowLimit() != null &&
                 mapResult.getTotalRows() > sheetConfig.getMaxRowLimit()) {
-            log.warn("超过最大行数限制: {}", sheetConfig.getMaxRowLimit());
+            log.warn("超过最大行数限�? {}", sheetConfig.getMaxRowLimit());
             return;
         }
 
-        // 转换数据并验证
+        // 转换数据并验�?
         Map<String, Object> rowData = new LinkedHashMap<>();
         List<String> rowErrors = new ArrayList<>();
 
@@ -189,7 +189,7 @@ public class DynamicExcelListener extends AnalysisEventListener<Map<Integer, Str
             mapResult.getSuccessData().add(rowData);
             batchData.add(rowData);
 
-            // 类型化转换
+            // 类型化转�?
             if (enableTypedConversion) {
                 Object typedObj = objectConverter.convertToObject(rowData, sheetConfig);
                 if (typedObj != null) {
@@ -199,7 +199,7 @@ public class DynamicExcelListener extends AnalysisEventListener<Map<Integer, Str
                 }
             }
 
-            // 批处理
+            // 批处�?
             if (batchData.size() >= BATCH_SIZE) {
                 if (batchCallback != null) {
                     batchCallback.process(new ArrayList<>(batchData));
@@ -226,7 +226,7 @@ public class DynamicExcelListener extends AnalysisEventListener<Map<Integer, Str
      */
     @Override
     public void doAfterAllAnalysed(AnalysisContext context) {
-        log.info("Excel解析完成, 总行数: {}, 成功: {}, 失败: {}",
+        log.info("Excel解析完成, 总行�? {}, 成功: {}, 失败: {}",
                 mapResult.getTotalRows(), mapResult.getSuccessRows(), mapResult.getFailedRows());
 
         // 处理剩余批次数据
@@ -241,11 +241,11 @@ public class DynamicExcelListener extends AnalysisEventListener<Map<Integer, Str
             typedBatchData.clear();
         }
 
-        // 检查最小行数限制
+        // 检查最小行数限�?
         if (sheetConfig.getMinRowLimit() != null &&
                 mapResult.getTotalRows() < sheetConfig.getMinRowLimit()) {
             mapResult.setSuccess(false);
-            mapResult.setMessage(String.format("数据行数少于最小限制: %d", sheetConfig.getMinRowLimit()));
+            mapResult.setMessage(String.format("数据行数少于最小限�? %d", sheetConfig.getMinRowLimit()));
             if (enableTypedConversion) {
                 typedResult.setSuccess(false);
                 typedResult.setMessage(mapResult.getMessage());
@@ -275,7 +275,7 @@ public class DynamicExcelListener extends AnalysisEventListener<Map<Integer, Str
     }
 
     /**
-     * 获取导入结果(类型化形式)
+     * 获取导入结果(类型化形�?
      * 
      * @param <T> 目标类型
      * @return 类型化的导入结果
@@ -290,7 +290,7 @@ public class DynamicExcelListener extends AnalysisEventListener<Map<Integer, Str
     }
 
     /**
-     * 处理类型化批次数据
+     * 处理类型化批次数�?
      */
     @SuppressWarnings("unchecked")
     private <T> void processTypedBatch() {
@@ -300,7 +300,7 @@ public class DynamicExcelListener extends AnalysisEventListener<Map<Integer, Str
     }
 
     /**
-     * 值类型转换
+     * 值类型转�?
      */
     private Object convertValue(String value, ExcelColumnConfig config) {
         if (!StringUtils.hasText(value)) {
@@ -324,22 +324,22 @@ public class DynamicExcelListener extends AnalysisEventListener<Map<Integer, Str
                     return Double.parseDouble(value.trim());
                 case "boolean":
                 case "bool":
-                    return "是".equals(value.trim()) || "true".equalsIgnoreCase(value.trim())
+                    return "�?.equals(value.trim()) || "true".equalsIgnoreCase(value.trim())
                             || "1".equals(value.trim());
                 case "date":
-                    // 日期保持字符串格式,由业务层处理
+                    // 日期保持字符串格�?由业务层处理
                     return value.trim();
                 default:
                     return value.trim();
             }
         } catch (Exception e) {
-            log.warn("值转换失败: {} -> {}, 错误: {}", value, fieldType, e.getMessage());
+            log.warn("值转换失�? {} -> {}, 错误: {}", value, fieldType, e.getMessage());
             return value;
         }
     }
 
     /**
-     * 批处理回调接口(Map形式)
+     * 批处理回调接�?Map形式)
      */
     @FunctionalInterface
     public interface BatchCallback {

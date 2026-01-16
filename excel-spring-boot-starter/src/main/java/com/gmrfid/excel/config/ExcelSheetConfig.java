@@ -1,4 +1,4 @@
-package com.app.tool.excel.config;
+package com.gmrfid.excel.config;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * Excel Sheet配置
- * 用于定义单个Sheet的配置信息
+ * 用于定义单个Sheet的配置信�?
  */
 @Data
 @Slf4j
@@ -19,17 +19,17 @@ public class ExcelSheetConfig {
     private String name;
 
     /**
-     * Sheet索引(从0开始)
+     * Sheet索引(�?开�?
      */
     private Integer sheetIndex = 0;
 
     /**
-     * 最小行数限制
+     * 最小行数限�?
      */
     private Integer minRowLimit = 1;
 
     /**
-     * 最大行数限制
+     * 最大行数限�?
      */
     private Integer maxRowLimit = 10000;
 
@@ -39,22 +39,22 @@ public class ExcelSheetConfig {
     private Integer headRowNumber = 1;
 
     /**
-     * ORM映射类全限定名
+     * ORM映射类全限定�?
      */
     private String ormClass;
 
     /**
-     * 缓存的ORM类对象
+     * 缓存的ORM类对�?
      */
     private transient Class<?> ormClassType;
 
     /**
-     * 列配置列表
+     * 列配置列�?
      */
     private List<ExcelColumnConfig> columns;
 
     /**
-     * 获取ORM映射类对象
+     * 获取ORM映射类对�?
      * 
      * @return ORM类对象，如果配置无效或类不存在则返回null
      */
@@ -69,13 +69,13 @@ public class ExcelSheetConfig {
             ormClassType = Class.forName(ormClass);
             return ormClassType;
         } catch (ClassNotFoundException e) {
-            log.warn("无法加载ORM类: {}", ormClass, e);
+            log.warn("无法加载ORM�? {}", ormClass, e);
             return null;
         }
     }
 
     /**
-     * 检查是否配置了有效的ORM类
+     * 检查是否配置了有效的ORM�?
      */
     public boolean hasOrmClass() {
         return getOrmClassType() != null;

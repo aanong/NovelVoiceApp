@@ -1,4 +1,4 @@
-package com.app.tool.excel.validator;
+package com.gmrfid.excel.validator;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.expression.EvaluationContext;
@@ -26,8 +26,8 @@ public class ExcelExpressionValidator {
     /**
      * 验证值是否满足表达式
      * 
-     * @param value      待验证的值
-     * @param expression 验证表达式
+     * @param value      待验证的�?
+     * @param expression 验证表达�?
      * @return 是否通过验证
      */
     public boolean validate(String value, String expression) {
@@ -41,7 +41,7 @@ public class ExcelExpressionValidator {
             Boolean result = exp.getValue(context, Boolean.class);
             return result != null && result;
         } catch (Exception e) {
-            log.warn("表达式验证失败: expression={}, value={}, error={}", expression, value, e.getMessage());
+            log.warn("表达式验证失�? expression={}, value={}, error={}", expression, value, e.getMessage());
             return false;
         }
     }
@@ -52,7 +52,7 @@ public class ExcelExpressionValidator {
     private EvaluationContext createContext(String value) {
         StandardEvaluationContext context = new StandardEvaluationContext();
 
-        // 设置值变量
+        // 设置值变�?
         context.setVariable("val", value);
 
         // 注册验证函数

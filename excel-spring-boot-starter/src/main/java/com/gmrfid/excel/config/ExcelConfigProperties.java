@@ -1,4 +1,4 @@
-package com.app.tool.excel.config;
+package com.gmrfid.excel.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Excel配置属性类
- * 从application.yml或excel-config.yml中读取配置
+ * 从application.yml或excel-config.yml中读取配�?
  * 
  * 配置格式示例:
  * 
@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *           headRowNumber: 1
  *           ormClass: com.example.model.User
  *           columns:
- *             - title: 用户名
+ *             - title: 用户�?
  *               field: username
  *               verifyExpression: "#notBlank(#val)"
  * </pre>
@@ -56,7 +56,7 @@ public class ExcelConfigProperties {
             return cached;
         }
 
-        // 遍历查找并缓存
+        // 遍历查找并缓�?
         if (tasks != null) {
             for (ExcelTaskConfig task : tasks) {
                 if (type.equals(task.getType())) {

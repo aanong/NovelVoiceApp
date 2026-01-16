@@ -1,9 +1,9 @@
-package com.app.tool.excel;
+package com.gmrfid.excel;
 
-import com.app.tool.excel.config.ExcelConfigProperties;
-import com.app.tool.excel.converter.ExcelObjectConverter;
-import com.app.tool.excel.service.ExcelService;
-import com.app.tool.excel.validator.ExcelExpressionValidator;
+import com.gmrfid.excel.config.ExcelConfigProperties;
+import com.gmrfid.excel.converter.ExcelObjectConverter;
+import com.gmrfid.excel.service.ExcelService;
+import com.gmrfid.excel.validator.ExcelExpressionValidator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -11,7 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Excel功能自动配置类
+ * Excel功能自动配置�?
  * 启用Excel相关的配置属性和组件扫描
  * 
  * 使用方式:
@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @EnableConfigurationProperties(ExcelConfigProperties.class)
-@ComponentScan(basePackages = "com.app.tool.excel")
+@ComponentScan(basePackages = "com.gmrfid.excel")
 public class ExcelAutoConfiguration {
 
     @Bean

@@ -1,4 +1,4 @@
-package com.app.tool.excel.validator;
+package com.gmrfid.excel.validator;
 
 import org.springframework.util.StringUtils;
 
@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  */
 public class ExcelValidatorFunctions {
 
-    // ==================== 字符串验证 ====================
+    // ==================== 字符串验�?====================
 
     /**
      * 非空验证
@@ -22,7 +22,7 @@ public class ExcelValidatorFunctions {
     }
 
     /**
-     * 空值验证(允许为空)
+     * 空值验�?允许为空)
      */
     public static boolean empty(String value) {
         return !StringUtils.hasText(value);
@@ -106,7 +106,7 @@ public class ExcelValidatorFunctions {
     // ==================== 正则验证 ====================
 
     /**
-     * 正则表达式验证
+     * 正则表达式验�?
      */
     public static boolean regex(String value, String pattern) {
         if (!StringUtils.hasText(value)) {
@@ -127,7 +127,7 @@ public class ExcelValidatorFunctions {
     }
 
     /**
-     * 手机号验证(中国大陆)
+     * 手机号验�?中国大陆)
      */
     public static boolean phone(String value) {
         if (!StringUtils.hasText(value)) {
