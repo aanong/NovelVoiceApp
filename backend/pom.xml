@@ -77,7 +77,7 @@
         </dependency>
         <!-- Excel Spring Boot Starter (基于EasyExcel的动态导入导出工具) -->
         <dependency>
-            <groupId>com.app.tool</groupId>
+            <groupId>com.gmrfid</groupId>
             <artifactId>excel-spring-boot-starter</artifactId>
             <version>1.0.0</version>
         </dependency>
