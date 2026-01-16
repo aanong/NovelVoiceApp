@@ -1,5 +1,6 @@
-# 详情的配置说明和配置示例，参见  task-excel-async-config-test.yml
-tasks:
+# 详情的配置说明和配置示例，参见 excel-spring-boot-starter 的 excel-config-example.yml
+excel:
+  tasks:
   # 批量导入未缴费数据
   - type: 100001
     uploadUseFileBuffer: false
