@@ -1,0 +1,380 @@
+# 详情的配置说明和配置示例，参见  task-excel-async-config-test.yml
+tasks:
+  # 批量导入未缴费数据
+  - type: 100001
+    uploadUseFileBuffer: false
+    failureFileDescription: 下载失败数据
+    verifyDuplicateTask: true
+    maxParallelRunNum: 10
+    sheets:
+      - name: 批量导入未缴费数据
+        sheetIndex: 0
+        minRowLimit: 1
+        maxRowLimit: 10000
+        headRowNumber: 2
+        ormClass: com.app.novelvoice.excel.model.BillDataImportModel
+        columns:
+          - title: 楼栋
+            field: number
+            verifyExpression: "#notBlank(#val)"
+
+          - title: 单元
+            field: unit
+            verifyExpression: "#empty(#val) || #lengthLessThan(#val, 64)"
+
+          - title: 楼层
+            field: floor
+            verifyExpression: "#empty(#val) || #lengthLessThan(#val, 64)"
+
+          - title: 房号
+            field: houseNo
+            verifyExpression: "#empty(#val) || #lengthLessThan(#val, 64)"
+
+          - title: 虚拟房号
+            field: roomNo
+            verifyExpression: "#empty(#val) || #lengthLessThan(#val, 64)"
+
+          - title: 交款状态
+            field: paymentStatus
+            verifyExpression: "#options(#val, '已交帐', '未交帐')"
+
+          - title: 使用人姓名
+            field: ownerName
+            verifyExpression: "#empty(#val) || #lengthLessThan(#val, 64)"
+
+          - title: 科目名称
+            field: name
+            verifyExpression: "#notBlank(#val) && #lengthLessThan(#val, 64)"
+
+          - title: 科目属性
+            field: incomeType
+            verifyExpression: "#options(#val, '公共收入', '非公共收入')"
+
+          - title: 计量单位名称
+            field: meteringUnitName
+            verifyExpression: "#notBlank(#val) && #lengthLessThan(#val, 64)"
+
+          - title: 账单生产日期
+            field: billDate
+            verifyExpression: "#empty(#val) || #dateFormat(#val, 'yyyy/MM/dd')"
+
+          - title: 账期开始时间
+            field: billStartDate
+            verifyExpression: "#notBlank(#val) && #dateFormat(#val, 'yyyy/MM/dd')"
+
+          - title: 账期结束时间
+            field: billEndDate
+            verifyExpression: "#notBlank(#val) && #dateFormat(#val, 'yyyy/MM/dd')"
+
+          - title: 单价
+            field: price
+            verifyExpression: "#notBlank(#val) && #doubleWithScale(#val, 2) && #doubleGreaterThan(#val, 0)"
+
+          - title: 数量
+            field: numbers
+            verifyExpression: "#notBlank(#val) && #longGreaterThanOrEquals(#val, 0)"
+
+          - title: 应收金额
+            field: billAmount
+            verifyExpression: "#notBlank(#val) && #doubleWithScale(#val, 2)"
+
+          - title: 用量起数
+            field: dosageStartNum
+            verifyExpression: "#empty(#val) || #longGreaterThanOrEquals(#val, 0)"
+
+          - title: 用量止数
+            field: dosageEndNum
+            verifyExpression: "#empty(#val) || #longGreaterThanOrEquals(#val, 0)"
+
+          - title: 是否校验
+            field: hasCheck
+            verifyExpression: "#empty(#val) || #options(#val, '是', '否')"
+  # 批量导入已缴费数据
+  - type: 100002
+    uploadUseFileBuffer: false
+    failureFileDescription: 下载失败数据
+    verifyDuplicateTask: true
+    maxParallelRunNum: 10
+    sheets:
+      - name: 批量导入已缴费数据
+        sheetIndex: 0
+        minRowLimit: 1
+        maxRowLimit: 10000
+        headRowNumber: 2
+        ormClass: com.app.novelvoice.excel.model.BillDataImportModel
+        columns:
+          - title: 楼栋
+            field: number
+            verifyExpression: "#notBlank(#val)"
+
+          - title: 单元
+            field: unit
+            verifyExpression: "#empty(#val) || #lengthLessThan(#val, 64)"
+
+          - title: 楼层
+            field: floor
+            verifyExpression: "#empty(#val) || #lengthLessThan(#val, 64)"
+
+          - title: 房号
+            field: houseNo
+            verifyExpression: "#empty(#val) || #lengthLessThan(#val, 64)"
+
+          - title: 虚拟房号
+            field: roomNo
+            verifyExpression: "#empty(#val) || #lengthLessThan(#val, 64)"
+
+          - title: 交款状态
+            field: paymentStatus
+            verifyExpression: "#options(#val, '已交帐', '未交帐')"
+
+          - title: 使用人姓名
+            field: ownerName
+            verifyExpression: "#empty(#val) || #lengthLessThan(#val, 64)"
+
+          - title: 科目名称
+            field: name
+            verifyExpression: "#notBlank(#val) && #lengthLessThan(#val, 64)"
+
+          - title: 科目属性
+            field: incomeType
+            verifyExpression: "#options(#val, '公共收入', '非公共收入')"
+
+          - title: 计量单位名称
+            field: meteringUnitName
+            verifyExpression: "#notBlank(#val) && #lengthLessThan(#val, 64)"
+
+          - title: 账单生产日期
+            field: billDate
+            verifyExpression: "#empty(#val) || #dateFormat(#val, 'yyyy/MM/dd')"
+
+          - title: 账期开始时间
+            field: billStartDate
+            verifyExpression: "#notBlank(#val) && #dateFormat(#val, 'yyyy/MM/dd')"
+
+          - title: 账期结束时间
+            field: billEndDate
+            verifyExpression: "#notBlank(#val) && #dateFormat(#val, 'yyyy/MM/dd')"
+
+          - title: 单价
+            field: price
+            verifyExpression: "#notBlank(#val) && #doubleWithScale(#val, 2) && #doubleGreaterThan(#val, 0)"
+
+          - title: 数量
+            field: numbers
+            verifyExpression: "#notBlank(#val) && #longGreaterThanOrEquals(#val, 0)"
+
+          - title: 应收金额
+            field: billAmount
+            verifyExpression: "#notBlank(#val) && #doubleWithScale(#val, 2)"
+
+          - title: 用量起数
+            field: dosageStartNum
+            verifyExpression: "#empty(#val) || #longGreaterThanOrEquals(#val, 0)"
+
+          - title: 用量止数
+            field: dosageEndNum
+            verifyExpression: "#empty(#val) || #longGreaterThanOrEquals(#val, 0)"
+
+          - title: 是否校验
+            field: hasCheck
+            verifyExpression: "#empty(#val) || #options(#val, '是', '否')"
+
+          - title: 违约金额
+            field: defalutAmount
+            verifyExpression: "#notBlank(#val) && #doubleWithScale(#val, 2)"
+
+          - title: 应缴金额
+            field: payableAmount
+            verifyExpression: "#notBlank(#val) && #doubleWithScale(#val, 2)"
+
+          - title: 折扣金额
+            field: discountAmount
+            verifyExpression: "#notBlank(#val) && #doubleWithScale(#val, 2)"
+
+          - title: 实缴金额
+            field: paidInAmount
+            verifyExpression: "#notBlank(#val) && #doubleWithScale(#val, 2)"
+
+          - title: 缴费方式
+            field: payWay
+            verifyExpression: "#options(#val, '扫码枪支付', '微信', '微信小程序', '支付宝', '银行卡', '现金', '平台', '银行转账', 'POS机', '预付款', '挂账', '历史补录', '财务扣收')"
+
+          - title: 编号
+            field: customPayNum
+            verifyExpression: "#empty(#val) || #lengthLessThan(#val, 64)"
+
+          - title: 缴费日期
+            field: payDate
+            verifyExpression: "#empty(#val) || #dateFormat(#val, 'yyyy/MM/dd')"
+  # 楼栋导入
+  - type: 100003
+    uploadUseFileBuffer: false
+    failureFileDescription: 下载失败数据
+    verifyDuplicateTask: true
+    maxParallelRunNum: 10
+    sheets:
+      - name: 楼栋导入
+        sheetIndex: 0
+        minRowLimit: 1
+        maxRowLimit: 10000
+        headRowNumber: 2
+        ormClass: com.app.novelvoice.excel.model.BuildingImportModel
+        columns:
+          - title: 楼栋
+            field: number
+            verifyExpression: "#notBlank(#val)"
+
+          - title: 单元
+            field: unit
+            verifyExpression: "#notBlank(#val)"
+
+          - title: 楼栋性质
+            field: buildingType
+            verifyExpression: "#notBlank(#val)"
+
+          - title: 有无电梯
+            field: haveElevator
+            verifyExpression: "#empty(#val) || #options(#val, '有', '无')"
+
+          - title: 地下层数
+            field: basementFloors
+            verifyExpression: "#empty(#val) || #longGreaterThanOrEquals(#val, 0)"
+
+          - title: 地面层数
+            field: groundFloors
+            verifyExpression: "#empty(#val) || #longGreaterThanOrEquals(#val, 0)"
+
+          - title: 楼层高度
+            field: floorHeight
+            verifyExpression: "#empty(#val) || #doubleWithScale(#val, 2)"
+
+          - title: 楼栋高度
+            field: buildingHeight
+            verifyExpression: "#empty(#val) || #doubleWithScale(#val, 2)"
+  # 房屋信息导入
+  - type: 100004
+    uploadUseFileBuffer: false
+    failureFileDescription: 下载失败数据
+    verifyDuplicateTask: true
+    maxParallelRunNum: 10
+    sheets:
+      - name: 房屋信息导入
+        sheetIndex: 0
+        minRowLimit: 1
+        maxRowLimit: 10000
+        headRowNumber: 2
+        ormClass: com.app.novelvoice.excel.model.HouseImportModel
+        columns:
+          - title: 楼栋
+            field: number
+            verifyExpression: "#notBlank(#val)"
+
+          - title: 单元
+            field: unit
+            verifyExpression: "#notBlank(#val)"
+
+          - title: 楼层
+            field: floor
+            verifyExpression: "#notBlank(#val)"
+
+          - title: 房号
+            field: houseNo
+            verifyExpression: "#notBlank(#val)"
+
+          - title: 房屋用途
+            field: purpose
+            verifyExpression: "#notBlank(#val) && #options(#val, '住宅', '公寓', '车位', '商业')"
+
+          - title: 楼层高度
+            field: buildArea
+            verifyExpression: "#notBlank(#val) && #doubleWithScale(#val, 2)"
+
+          - title: 专有建筑面积
+            field: realArea
+            verifyExpression: "#notBlank(#val) && #doubleWithScale(#val, 2)"
+
+          - title: 房屋状态
+            field: houseStatus
+            verifyExpression: "#empty(#val) || #options(#val, '未售出', '已售出')"
+
+          - title: 数据来源
+            field: dataSource
+            verifyExpression: "#empty(#val) || #options(#val, '住建同步', '物业企业', '社区街道', '自治组织')"
+
+          - title: 备注（公开业主）
+            field: openRemark
+            verifyExpression: "#empty(#val) || #lengthLessThan(#val, 255)"
+
+          - title: 备注（非公开）
+            field: privateRemark
+            verifyExpression: "#empty(#val) || #lengthLessThan(#val, 255)"
+  # 业主信息导入
+  - type: 100005
+    uploadUseFileBuffer: false
+    failureFileDescription: 下载失败数据
+    verifyDuplicateTask: true
+    maxParallelRunNum: 10
+    sheets:
+      - name: 业主信息导入
+        sheetIndex: 0
+        minRowLimit: 1
+        maxRowLimit: 10000
+        headRowNumber: 2
+        ormClass: com.app.novelvoice.excel.model.HouseUserImportModel
+        columns:
+          - title: 楼栋
+            field: number
+            verifyExpression: "#notBlank(#val)"
+
+          - title: 单元
+            field: unit
+            verifyExpression: "#notBlank(#val)"
+
+          - title: 楼层
+            field: floor
+            verifyExpression: "#notBlank(#val)"
+
+          - title: 房号
+            field: houseNo
+            verifyExpression: "#notBlank(#val)"
+
+          - title: 姓名
+            field: name
+            verifyExpression: "#notBlank(#val) && #lengthLessThan(#val, 64)"
+          - title: 身份
+            field: type
+            verifyExpression: "#notBlank(#val) && #options(#val,  '租客', '业主', '亲属')"
+
+          - title: 数据来源
+            field: dataSource
+            verifyExpression: "#empty(#val) || #lengthLessThan(#val, 64)"
+
+          - title: 联系手机
+            field: phone
+            verifyExpression: "#empty(#val) || #lengthLessThan(#val, 64)"
+
+
+
+          - title: 与业主关系
+            field: relation
+            verifyExpression: "#empty(#val) || #options(#val, '业主本人', '租客', '丈夫', '妻子', '女儿', '儿子', '父子', '母亲', '岳父', '岳母', '亲友', '其他', '祖孙', '夫妻', '租赁')"
+
+          - title: 性别
+            field: sex
+            verifyExpression: "#empty(#val) || #options(#val, '男', '女')"
+
+          - title: 证件类型
+            field: idType
+            verifyExpression: "#empty(#val)  || #options(#val, '身份证', '护照', '其它组织证件', '港澳台通行证', '警官证', '军官证', '营业执照')"
+
+          - title: 证件号码
+            field: idCard
+            verifyExpression: "#empty(#val) || #lengthLessThan(#val, 64)"
+
+          - title: 常住人口
+            field: oftenLive
+            verifyExpression: "#empty(#val) || #options(#val, '是', '否')"
+
+          - title: 人员标签
+            field: tags
+            verifyExpression: "#empty(#val) || #lengthLessThan(#val, 255)"
