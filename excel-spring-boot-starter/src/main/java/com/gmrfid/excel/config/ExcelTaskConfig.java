@@ -1,12 +1,11 @@
 package com.gmrfid.excel.config;
 
 import lombok.Data;
-
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Excel任务配置
- * 用于定义一个完整的导入/导出任务
  */
 @Data
 public class ExcelTaskConfig {
@@ -17,12 +16,12 @@ public class ExcelTaskConfig {
     private String type;
 
     /**
-     * 任务名称(描述)
+     * 任务名称
      */
     private String name;
 
     /**
-     * 是否使用文件缓冲
+     * 上传是否使用文件缓冲
      */
     private boolean uploadUseFileBuffer = false;
 
@@ -39,15 +38,15 @@ public class ExcelTaskConfig {
     /**
      * 最大并行运行数
      */
-    private Integer maxParallelRunNum = 10;
+    private int maxParallelRunNum = 10;
 
     /**
-     * 导出时的文件名模�?支持日期占位�?
+     * 导出文件名称模板
      */
     private String exportFileName;
 
     /**
      * Sheet配置列表
      */
-    private List<ExcelSheetConfig> sheets;
+    private List<ExcelSheetConfig> sheets = new ArrayList<>();
 }

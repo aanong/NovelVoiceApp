@@ -2,17 +2,14 @@ package com.gmrfid.excel.config;
 
 import lombok.Data;
 
-import java.util.List;
-
 /**
- * Excel列配�?
- * 用于定义导入导出时的列映射关系和验证规则
+ * Excel列配置
  */
 @Data
 public class ExcelColumnConfig {
 
     /**
-     * 列标�?表头显示名称)
+     * 列标题
      */
     private String title;
 
@@ -22,25 +19,22 @@ public class ExcelColumnConfig {
     private String field;
 
     /**
-     * 字段类型: string, integer, long, double, date, boolean
+     * 字段类型 (string, int, long, double, date, boolean)
      */
     private String fieldType = "string";
 
     /**
-     * 日期格式(当fieldType为date时使�?
+     * 日期格式 (如果是日期类型)
      */
     private String dateFormat = "yyyy-MM-dd";
 
     /**
-     * 验证表达�?SpEL表达�?
-     * 支持: #notBlank(#val), #empty(#val), #lengthLessThan(#val, 64),
-     * #options(#val, 'opt1', 'opt2'), #dateFormat(#val, 'yyyy/MM/dd'),
-     * #doubleWithScale(#val, 2), #longGreaterThan(#val, 0) �?
+     * 验证表达式 (SpEL)
      */
     private String verifyExpression;
 
     /**
-     * 验证失败时的错误提示信息
+     * 验证失败时的错误提示
      */
     private String errorMessage;
 
@@ -50,27 +44,17 @@ public class ExcelColumnConfig {
     private boolean required = false;
 
     /**
-     * 列宽(导出时使�?
+     * 列宽
      */
-    private Integer width = 20;
+    private int width = 20;
 
     /**
-     * 列索�?可�?不指定则按顺�?
-     */
-    private Integer index;
-
-    /**
-     * 是否导出(默认导出)
+     * 是否可导出
      */
     private boolean exportable = true;
 
     /**
-     * 是否导入(默认导入)
+     * 是否可导入
      */
     private boolean importable = true;
-
-    /**
-     * 字典转换器名�?用于枚举值转�?
-     */
-    private String converter;
 }

@@ -1,137 +1,85 @@
 package com.gmrfid.excel.dto;
 
 import lombok.Data;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Excel导入结果
+ * Excel导入结果封装
  * 
- * @param <T> 成功数据的类�?
+ * @param <T> 成功数据的类型(Map或指定的Java对象)
  */
 @Data
 public class ExcelImportResult<T> {
 
     /**
-     * 是否成功
+     * 是否全部成?
      */
-    private boolean success;
+    private boolean success = true;
 
     /**
-     * 总行�?
+     * 总行?(不含表头)
      */
-    private int totalRows;
+    private int totalRows = 0;
 
     /**
      * 成功行数
      */
-    private int successRows;
+    private int successRows = 0;
 
     /**
      * 失败行数
      */
-    private int failedRows;
+    private int failedRows = 0;
 
     /**
-     * 成功数据列表
+     * 成功的数据列?
      */
     private List<T> successData = new ArrayList<>();
 
     /**
-     * 失败数据列表(包含行号和错误信�?
-     */
-    private List<RowError> errors = new ArrayList<>();
-
-    /**
-     * 原始数据(Map形式,用于导出失败数据)
+     * 失败的原始数据列表(Map形式,用于导出失败数据)
      */
     private List<Map<String, Object>> failedRawData = new ArrayList<>();
 
     /**
-     * 错误信息
+     * 错误信息列表
      */
-    private String message;
+    private List<String> errorMessages = new ArrayList<>();
 
     /**
-     * 行错误信�?
-     */
-    @Data
-    public static class RowError {
-        /**
-         * 行号(�?开�?含表�?
-         */
-        private int rowIndex;
-
-        /**
-         * 错误字段
-         */
-        private String field;
-
-        /**
-         * 错误�?
-         */
-        private Object value;
-
-        /**
-         * 错误信息
-         */
-        private String errorMessage;
-
-        /**
-         * 原始行数�?
-         */
-        private Map<String, Object> rowData;
-
-        public RowError() {
-        }
-
-        public RowError(int rowIndex, String field, Object value, String errorMessage) {
-            this.rowIndex = rowIndex;
-            this.field = field;
-            this.value = value;
-            this.errorMessage = errorMessage;
-        }
-    }
-
-    /**
-     * 创建成功结果
-     */
-    public static <T> ExcelImportResult<T> success(List<T> data) {
-        ExcelImportResult<T> result = new ExcelImportResult<>();
-        result.setSuccess(true);
-        result.setTotalRows(data.size());
-        result.setSuccessRows(data.size());
-        result.setFailedRows(0);
-        result.setSuccessData(data);
-        result.setMessage("导入成功");
-        return result;
-    }
-
-    /**
-     * 创建失败结果
+     * 静态构造: 失败
      */
     public static <T> ExcelImportResult<T> fail(String message) {
         ExcelImportResult<T> result = new ExcelImportResult<>();
         result.setSuccess(false);
-        result.setMessage(message);
+        result.getErrorMessages().add(message);
         return result;
     }
 
     /**
-     * 添加错误
+     * 添加成功记录
      */
-    public void addError(int rowIndex, String field, Object value, String errorMessage,
-            Map<String, Object> rowData) {
-        RowError error = new RowError(rowIndex, field, value, errorMessage);
-        error.setRowData(rowData);
-        this.errors.add(error);
-        if (rowData != null) {
-            // 添加错误信息到原始数�?
-            rowData.put("_errorMessage", errorMessage);
-            this.failedRawData.add(rowData);
-        }
+    public void addSuccess(T data) {
+        this.successRows++;
+        this.successData.add(data);
+    }
+
+    /**
+     * 添加失败记录
+     */
+    public void addFailed(Map<String, Object> rawData, String message) {
+        this.success = false;
         this.failedRows++;
+        this.failedRawData.add(rawData);
+        this.errorMessages.add("第" + (totalRows + 1) + "行: " + message);
+    }
+
+    /**
+     * 增加总行?
+     */
+    public void incrementTotal() {
+        this.totalRows++;
     }
 }

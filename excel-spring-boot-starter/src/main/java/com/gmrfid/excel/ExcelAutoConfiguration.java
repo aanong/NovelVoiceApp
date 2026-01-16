@@ -11,13 +11,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Excel功能自动配置�?
+ * Excel功能自动配置类
  * 启用Excel相关的配置属性和组件扫描
- * 
- * 使用方式:
- * 1. 在项目中引入此starter依赖
- * 2. 在application.yml中配置excel任务
- * 3. 注入ExcelService使用
  */
 @Configuration
 @EnableConfigurationProperties(ExcelConfigProperties.class)

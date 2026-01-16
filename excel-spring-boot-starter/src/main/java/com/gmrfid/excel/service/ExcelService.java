@@ -57,10 +57,10 @@ public class ExcelService {
     /**
      * 导入Excel文件(返回Map形式)
      * 
-     * @param file          上传的文�?
+     * @param file          上传的文件
      * @param taskType      任务类型
      * @param sheetIndex    Sheet索引(默认0)
-     * @param batchCallback 批处理回�?可�?
+     * @param batchCallback 批处理回调(可选)
      * @return 导入结果
      */
     public ExcelImportResult<Map<String, Object>> importExcel(
@@ -72,7 +72,7 @@ public class ExcelService {
         // 获取任务配置
         ExcelTaskConfig taskConfig = excelConfig.getTaskConfig(taskType);
         if (taskConfig == null) {
-            return ExcelImportResult.fail("未找到任务配�? " + taskType);
+            return ExcelImportResult.fail("未找到任务配置: " + taskType);
         }
 
         // 获取Sheet配置
@@ -83,7 +83,7 @@ public class ExcelService {
         }
 
         try (InputStream inputStream = file.getInputStream()) {
-            // 创建监听�?
+            // 创建监听器
             DynamicExcelListener listener = new DynamicExcelListener(
                     sheetConfig, expressionValidator, batchCallback);
 
@@ -109,13 +109,13 @@ public class ExcelService {
     }
 
     /**
-     * 导入Excel文件并转换为指定类型的对象列�?
+     * 导入Excel文件并转换为指定类型的对象列表
      * 根据YML配置中的ormClass自动进行类型转换
      * 
-     * @param file               上传的文�?
+     * @param file               上传的文件
      * @param taskType           任务类型
      * @param sheetIndex         Sheet索引(默认0)
-     * @param typedBatchCallback 类型化批处理回调(可�?
+     * @param typedBatchCallback 类型化批处理回调(可选)
      * @param <T>                目标类型(由ormClass指定)
      * @return 类型化的导入结果
      */
@@ -128,7 +128,7 @@ public class ExcelService {
         // 获取任务配置
         ExcelTaskConfig taskConfig = excelConfig.getTaskConfig(taskType);
         if (taskConfig == null) {
-            return ExcelImportResult.fail("未找到任务配�? " + taskType);
+            return ExcelImportResult.fail("未找到任务配置: " + taskType);
         }
 
         // 获取Sheet配置
@@ -144,7 +144,7 @@ public class ExcelService {
         }
 
         try (InputStream inputStream = file.getInputStream()) {
-            // 创建支持类型化转换的监听�?
+            // 创建支持类型化转换的监听器
             DynamicExcelListener listener = new DynamicExcelListener(
                     sheetConfig, expressionValidator, objectConverter, typedBatchCallback);
 
@@ -163,14 +163,14 @@ public class ExcelService {
     }
 
     /**
-     * 导入Excel文件并转换为指定类型的对象列�?简化版)
+     * 导入Excel文件并转换为指定类型的对象列表(简化版)
      */
     public <T> ExcelImportResult<T> importExcelAsObject(MultipartFile file, String taskType) {
         return importExcelAsObject(file, taskType, 0, null);
     }
 
     /**
-     * 导入Excel文件并直接返回对象列�?
+     * 导入Excel文件并直接返回对象列表
      */
     public <T> List<T> importExcelAsObjectList(MultipartFile file, String taskType) {
         ExcelImportResult<T> result = importExcelAsObject(file, taskType);
@@ -188,7 +188,7 @@ public class ExcelService {
             Integer sheetIndex) {
         ExcelTaskConfig taskConfig = excelConfig.getTaskConfig(taskType);
         if (taskConfig == null) {
-            log.warn("未找到任务配�? {}", taskType);
+            log.warn("未找到任务配置: {}", taskType);
             return new ArrayList<>();
         }
 
@@ -210,7 +210,7 @@ public class ExcelService {
             Integer sheetIndex) {
         ExcelTaskConfig taskConfig = excelConfig.getTaskConfig(taskType);
         if (taskConfig == null) {
-            log.warn("未找到任务配�? {}", taskType);
+            log.warn("未找到任务配置: {}", taskType);
             return new ArrayList<>();
         }
 
@@ -232,7 +232,7 @@ public class ExcelService {
     public void exportExcel(HttpServletResponse response, ExcelExportRequest request) {
         ExcelTaskConfig taskConfig = excelConfig.getTaskConfig(request.getTaskType());
         if (taskConfig == null) {
-            throw new ExcelException("未找到任务配�? " + request.getTaskType());
+            throw new ExcelException("未找到任务配置: " + request.getTaskType());
         }
 
         int sheetIdx = request.getSheetIndex() != null ? request.getSheetIndex() : 0;
@@ -267,7 +267,7 @@ public class ExcelService {
     public void exportExcel(OutputStream outputStream, ExcelExportRequest request) {
         ExcelTaskConfig taskConfig = excelConfig.getTaskConfig(request.getTaskType());
         if (taskConfig == null) {
-            throw new ExcelException("未找到任务配�? " + request.getTaskType());
+            throw new ExcelException("未找到任务配置: " + request.getTaskType());
         }
 
         int sheetIdx = request.getSheetIndex() != null ? request.getSheetIndex() : 0;
@@ -294,7 +294,7 @@ public class ExcelService {
             ExcelImportResult<?> importResult,
             String taskType) {
         if (importResult.getFailedRawData().isEmpty()) {
-            throw new ExcelException("没有失败数据需要导�?);
+            throw new ExcelException("没有失败数据需要导出");
         }
 
         ExcelExportRequest request = new ExcelExportRequest();
@@ -311,7 +311,7 @@ public class ExcelService {
     public void downloadTemplate(HttpServletResponse response, String taskType) {
         ExcelTaskConfig taskConfig = excelConfig.getTaskConfig(taskType);
         if (taskConfig == null) {
-            throw new ExcelException("未找到任务配�? " + taskType);
+            throw new ExcelException("未找到任务配置: " + taskType);
         }
 
         ExcelSheetConfig sheetConfig = getSheetConfig(taskConfig, 0);
@@ -347,7 +347,7 @@ public class ExcelService {
     }
 
     /**
-     * 获取所有任务类�?
+     * 获取所有任务类型
      */
     public List<Map<String, String>> getTaskTypes() {
         List<Map<String, String>> result = new ArrayList<>();
@@ -508,7 +508,7 @@ public class ExcelService {
         }
 
         if (value instanceof Boolean) {
-            return (Boolean) value ? "�? : "�?;
+            return (Boolean) value ? "是" : "否";
         }
 
         return value;

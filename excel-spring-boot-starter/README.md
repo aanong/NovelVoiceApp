@@ -17,7 +17,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.app.tool</groupId>
+    <groupId>com.gmrfid</groupId>
     <artifactId>excel-spring-boot-starter</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -50,7 +50,7 @@ excel:
 
 ```java
 @Autowired
-private ExcelService excelService;
+private com.gmrfid.excel.service.ExcelService excelService;
 
 // 导入Excel (Map形式)
 ExcelImportResult<Map<String, Object>> result = excelService.importExcel(file, "user_import");
@@ -86,46 +86,6 @@ excelService.exportExcel(response, request);
 | `#longBetween(#val, 1, 100)` | 数值范围(long) |
 
 表达式可以使用 `&&` 和 `||` 组合。
-
-## 配置项说明
-
-### 任务配置 (ExcelTaskConfig)
-
-| 属性 | 说明 | 默认值 |
-|------|------|--------|
-| type | 任务类型(唯一标识) | - |
-| name | 任务名称 | - |
-| uploadUseFileBuffer | 是否使用文件缓冲 | false |
-| failureFileDescription | 失败文件描述 | 下载失败数据 |
-| verifyDuplicateTask | 是否验证重复任务 | false |
-| maxParallelRunNum | 最大并行运行数 | 10 |
-| exportFileName | 导出文件名模板 | - |
-
-### Sheet配置 (ExcelSheetConfig)
-
-| 属性 | 说明 | 默认值 |
-|------|------|--------|
-| name | Sheet名称 | - |
-| sheetIndex | Sheet索引(从0开始) | 0 |
-| minRowLimit | 最小行数限制 | 1 |
-| maxRowLimit | 最大行数限制 | 10000 |
-| headRowNumber | 表头行数 | 1 |
-| ormClass | ORM映射类全限定名 | - |
-
-### 列配置 (ExcelColumnConfig)
-
-| 属性 | 说明 | 默认值 |
-|------|------|--------|
-| title | 列标题(表头显示名称) | - |
-| field | 对应的实体字段名 | - |
-| fieldType | 字段类型 | string |
-| dateFormat | 日期格式 | yyyy-MM-dd |
-| verifyExpression | 验证表达式 | - |
-| errorMessage | 验证失败提示 | - |
-| required | 是否必填 | false |
-| width | 列宽(导出时使用) | 20 |
-| exportable | 是否导出 | true |
-| importable | 是否导入 | true |
 
 ## License
 

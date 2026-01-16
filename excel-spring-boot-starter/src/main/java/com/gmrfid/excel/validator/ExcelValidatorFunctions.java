@@ -1,330 +1,143 @@
 package com.gmrfid.excel.validator;
 
 import org.springframework.util.StringUtils;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 /**
- * Excel验证函数集合
- * 用于SpEL表达式中调用
+ * Excel数据验证预定义函数集
+ * 供SpEL表达式中调用，例如: #notBlank(#val)
  */
 public class ExcelValidatorFunctions {
 
-    // ==================== 字符串验�?====================
-
-    /**
-     * 非空验证
-     */
-    public static boolean notBlank(String value) {
-        return StringUtils.hasText(value);
+    public static boolean notBlank(Object val) {
+        if (val == null)
+            return false;
+        return StringUtils.hasText(String.valueOf(val));
     }
 
-    /**
-     * 空值验�?允许为空)
-     */
-    public static boolean empty(String value) {
-        return !StringUtils.hasText(value);
-    }
-
-    /**
-     * 长度小于
-     */
-    public static boolean lengthLessThan(String value, int maxLength) {
-        if (!StringUtils.hasText(value)) {
+    public static boolean empty(Object val) {
+        if (val == null)
             return true;
-        }
-        return value.length() < maxLength;
+        return !StringUtils.hasText(String.valueOf(val));
     }
 
-    /**
-     * 长度大于
-     */
-    public static boolean lengthGreaterThan(String value, int minLength) {
-        if (!StringUtils.hasText(value)) {
+    public static boolean lengthEquals(Object val, int len) {
+        if (val == null)
             return false;
-        }
-        return value.length() > minLength;
+        return String.valueOf(val).length() == len;
     }
 
-    /**
-     * 长度等于
-     */
-    public static boolean lengthEquals(String value, int length) {
-        if (!StringUtils.hasText(value)) {
-            return false;
-        }
-        return value.length() == length;
-    }
-
-    /**
-     * 长度范围
-     */
-    public static boolean lengthBetween(String value, int minLength, int maxLength) {
-        if (!StringUtils.hasText(value)) {
-            return false;
-        }
-        int len = value.length();
-        return len >= minLength && len <= maxLength;
-    }
-
-    /**
-     * 选项验证
-     */
-    public static boolean options(String value, String... options) {
-        if (!StringUtils.hasText(value)) {
-            return true; // 空值通过
-        }
-        for (String option : options) {
-            if (value.equals(option)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // ==================== 日期验证 ====================
-
-    /**
-     * 日期格式验证
-     */
-    public static boolean dateFormat(String value, String format) {
-        if (!StringUtils.hasText(value)) {
+    public static boolean lengthLessThan(Object val, int max) {
+        if (val == null)
             return true;
-        }
+        return String.valueOf(val).length() < max;
+    }
+
+    public static boolean lengthBetween(Object val, int min, int max) {
+        if (val == null)
+            return false;
+        int len = String.valueOf(val).length();
+        return len >= min && len <= max;
+    }
+
+    public static boolean options(Object val, String... options) {
+        if (val == null)
+            return false;
+        String strVal = String.valueOf(val);
+        return Arrays.asList(options).contains(strVal);
+    }
+
+    public static boolean dateFormat(Object val, String format) {
+        if (val == null)
+            return false;
         try {
             SimpleDateFormat sdf = new SimpleDateFormat(format);
             sdf.setLenient(false);
-            sdf.parse(value.trim());
+            sdf.parse(String.valueOf(val));
             return true;
         } catch (ParseException e) {
             return false;
         }
     }
 
-    // ==================== 正则验证 ====================
-
-    /**
-     * 正则表达式验�?
-     */
-    public static boolean regex(String value, String pattern) {
-        if (!StringUtils.hasText(value)) {
-            return true;
-        }
-        return Pattern.matches(pattern, value);
+    public static boolean regex(Object val, String regex) {
+        if (val == null)
+            return false;
+        return Pattern.matches(regex, String.valueOf(val));
     }
 
     /**
-     * 邮箱验证
+     * 常用正则表达式快捷验证
      */
-    public static boolean email(String value) {
-        if (!StringUtils.hasText(value)) {
-            return true;
-        }
-        String emailPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
-        return Pattern.matches(emailPattern, value);
+    public static boolean email(Object val) {
+        return regex(val, "^[A-Za-z0-9+_.-]+@(.+)$");
+    }
+
+    public static boolean phone(Object val) {
+        return regex(val, "^1[3-9]\\d{9}$");
+    }
+
+    public static boolean idCard(Object val) {
+        return regex(val, "(^\\d{15}$)|(^\\d{18}$)|(^\\d{17}(\\d|X|x)$)");
     }
 
     /**
-     * 手机号验�?中国大陆)
+     * 数值相关验证
      */
-    public static boolean phone(String value) {
-        if (!StringUtils.hasText(value)) {
-            return true;
-        }
-        String phonePattern = "^1[3-9]\\d{9}$";
-        return Pattern.matches(phonePattern, value);
-    }
-
-    /**
-     * 身份证号验证(中国大陆)
-     */
-    public static boolean idCard(String value) {
-        if (!StringUtils.hasText(value)) {
-            return true;
-        }
-        // 18位身份证
-        String idCardPattern = "^\\d{17}[\\dXx]$";
-        return Pattern.matches(idCardPattern, value);
-    }
-
-    // ==================== 数字验证 ====================
-
-    /**
-     * 小数位数验证
-     */
-    public static boolean doubleWithScale(String value, int scale) {
-        if (!StringUtils.hasText(value)) {
-            return true;
-        }
+    public static boolean doubleWithScale(Object val, int scale) {
+        if (val == null)
+            return false;
         try {
-            String trimmed = value.trim();
-            int dotIndex = trimmed.indexOf('.');
-            if (dotIndex == -1) {
-                return true; // 整数OK
-            }
-            int actualScale = trimmed.length() - dotIndex - 1;
-            Double.parseDouble(trimmed); // 验证是否有效数字
-            return actualScale <= scale;
-        } catch (NumberFormatException e) {
+            String str = String.valueOf(val);
+            if (!str.contains("."))
+                return true;
+            return str.split("\\.")[1].length() <= scale;
+        } catch (Exception e) {
             return false;
         }
     }
 
-    /**
-     * 大于(double)
-     */
-    public static boolean doubleGreaterThan(String value, double threshold) {
-        if (!StringUtils.hasText(value)) {
-            return true;
-        }
+    public static boolean doubleGreaterThan(Object val, double limit) {
         try {
-            return Double.parseDouble(value.trim()) > threshold;
-        } catch (NumberFormatException e) {
+            return Double.parseDouble(String.valueOf(val)) > limit;
+        } catch (Exception e) {
             return false;
         }
     }
 
-    /**
-     * 大于等于(double)
-     */
-    public static boolean doubleGreaterThanOrEquals(String value, double threshold) {
-        if (!StringUtils.hasText(value)) {
-            return true;
-        }
+    public static boolean doubleLessThan(Object val, double limit) {
         try {
-            return Double.parseDouble(value.trim()) >= threshold;
-        } catch (NumberFormatException e) {
+            return Double.parseDouble(String.valueOf(val)) < limit;
+        } catch (Exception e) {
             return false;
         }
     }
 
-    /**
-     * 小于(double)
-     */
-    public static boolean doubleLessThan(String value, double threshold) {
-        if (!StringUtils.hasText(value)) {
-            return true;
-        }
+    public static boolean doubleBetween(Object val, double min, double max) {
         try {
-            return Double.parseDouble(value.trim()) < threshold;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    /**
-     * 范围(double)
-     */
-    public static boolean doubleBetween(String value, double min, double max) {
-        if (!StringUtils.hasText(value)) {
-            return true;
-        }
-        try {
-            double d = Double.parseDouble(value.trim());
+            double d = Double.parseDouble(String.valueOf(val));
             return d >= min && d <= max;
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             return false;
         }
     }
 
-    /**
-     * 大于(long)
-     */
-    public static boolean longGreaterThan(String value, long threshold) {
-        if (!StringUtils.hasText(value)) {
-            return true;
-        }
+    public static boolean longGreaterThan(Object val, long limit) {
         try {
-            return Long.parseLong(value.trim()) > threshold;
-        } catch (NumberFormatException e) {
+            return Long.parseLong(String.valueOf(val)) > limit;
+        } catch (Exception e) {
             return false;
         }
     }
 
-    /**
-     * 大于等于(long)
-     */
-    public static boolean longGreaterThanOrEquals(String value, long threshold) {
-        if (!StringUtils.hasText(value)) {
-            return true;
-        }
+    public static boolean longBetween(Object val, long min, long max) {
         try {
-            return Long.parseLong(value.trim()) >= threshold;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    /**
-     * 小于(long)
-     */
-    public static boolean longLessThan(String value, long threshold) {
-        if (!StringUtils.hasText(value)) {
-            return true;
-        }
-        try {
-            return Long.parseLong(value.trim()) < threshold;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    /**
-     * 范围(long)
-     */
-    public static boolean longBetween(String value, long min, long max) {
-        if (!StringUtils.hasText(value)) {
-            return true;
-        }
-        try {
-            long l = Long.parseLong(value.trim());
+            long l = Long.parseLong(String.valueOf(val));
             return l >= min && l <= max;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    /**
-     * 大于(int)
-     */
-    public static boolean intGreaterThan(String value, int threshold) {
-        if (!StringUtils.hasText(value)) {
-            return true;
-        }
-        try {
-            return Integer.parseInt(value.trim()) > threshold;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    /**
-     * 小于(int)
-     */
-    public static boolean intLessThan(String value, int threshold) {
-        if (!StringUtils.hasText(value)) {
-            return true;
-        }
-        try {
-            return Integer.parseInt(value.trim()) < threshold;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    /**
-     * 范围(int)
-     */
-    public static boolean intBetween(String value, int min, int max) {
-        if (!StringUtils.hasText(value)) {
-            return true;
-        }
-        try {
-            int i = Integer.parseInt(value.trim());
-            return i >= min && i <= max;
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             return false;
         }
     }

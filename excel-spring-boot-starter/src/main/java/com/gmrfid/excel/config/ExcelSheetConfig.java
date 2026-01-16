@@ -2,12 +2,12 @@ package com.gmrfid.excel.config;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-
+import org.springframework.util.ClassUtils;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Excel Sheet配置
- * 用于定义单个Sheet的配置信�?
  */
 @Data
 @Slf4j
@@ -19,63 +19,56 @@ public class ExcelSheetConfig {
     private String name;
 
     /**
-     * Sheet索引(�?开�?
+     * Sheet索引(从0开始)
      */
     private Integer sheetIndex = 0;
 
     /**
-     * 最小行数限�?
+     * 最小行数限制
      */
-    private Integer minRowLimit = 1;
+    private int minRowLimit = 1;
 
     /**
-     * 最大行数限�?
+     * 最大行数限制
      */
-    private Integer maxRowLimit = 10000;
+    private int maxRowLimit = 10000;
 
     /**
-     * 表头行数(从第几行开始是数据)
+     * 表头行数
      */
-    private Integer headRowNumber = 1;
+    private int headRowNumber = 1;
 
     /**
-     * ORM映射类全限定�?
+     * ORM映射类全限定名
      */
     private String ormClass;
 
     /**
-     * 缓存的ORM类对�?
+     * 缓存加载的类对象
      */
     private transient Class<?> ormClassType;
 
     /**
-     * 列配置列�?
+     * 列配置列表
      */
-    private List<ExcelColumnConfig> columns;
+    private List<ExcelColumnConfig> columns = new ArrayList<>();
 
     /**
-     * 获取ORM映射类对�?
-     * 
-     * @return ORM类对象，如果配置无效或类不存在则返回null
+     * 获取ORM类对象
      */
     public Class<?> getOrmClassType() {
-        if (ormClassType != null) {
-            return ormClassType;
+        if (ormClassType == null && ormClass != null && !ormClass.isEmpty()) {
+            try {
+                ormClassType = ClassUtils.forName(ormClass, null);
+            } catch (ClassNotFoundException e) {
+                log.error("未找到配置的ormClass: {}", ormClass);
+            }
         }
-        if (ormClass == null || ormClass.isEmpty()) {
-            return null;
-        }
-        try {
-            ormClassType = Class.forName(ormClass);
-            return ormClassType;
-        } catch (ClassNotFoundException e) {
-            log.warn("无法加载ORM�? {}", ormClass, e);
-            return null;
-        }
+        return ormClassType;
     }
 
     /**
-     * 检查是否配置了有效的ORM�?
+     * 是否包含有效的ORM类配置
      */
     public boolean hasOrmClass() {
         return getOrmClassType() != null;
