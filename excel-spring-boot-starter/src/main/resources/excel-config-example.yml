@@ -1,0 +1,143 @@
+# 详情的配置说明和配置示例
+
+# Excel导入导出配置示例
+# 此文件可作为使用excel-spring-boot-starter的参考模板
+
+excel:
+  tasks:
+    # 示例1: 用户导入
+    - type: user_import
+      name: 用户导入
+      uploadUseFileBuffer: false
+      failureFileDescription: 下载失败数据
+      verifyDuplicateTask: true
+      maxParallelRunNum: 10
+      sheets:
+        - name: 用户数据
+          sheetIndex: 0
+          minRowLimit: 1
+          maxRowLimit: 10000
+          headRowNumber: 1
+          ormClass: com.example.model.User  # 指定要转换的目标类
+          columns:
+            - title: 用户名
+              field: username
+              fieldType: string
+              verifyExpression: "#notBlank(#val) && #lengthLessThan(#val, 64)"
+              errorMessage: 用户名不能为空且长度不能超过64个字符
+              required: true
+              
+            - title: 昵称
+              field: nickname
+              fieldType: string
+              verifyExpression: "#empty(#val) || #lengthLessThan(#val, 64)"
+              
+            - title: 邮箱
+              field: email
+              fieldType: string
+              verifyExpression: "#empty(#val) || #email(#val)"
+              errorMessage: 邮箱格式不正确
+              
+            - title: 手机号
+              field: phone
+              fieldType: string
+              verifyExpression: "#empty(#val) || #phone(#val)"
+              errorMessage: 手机号格式不正确
+              
+            - title: 状态
+              field: status
+              fieldType: string
+              verifyExpression: "#options(#val, '启用', '禁用')"
+              errorMessage: 状态只能是启用或禁用
+
+    # 示例2: 账单导入(已缴费)
+    - type: bill_paid_import
+      name: 已缴费账单导入
+      uploadUseFileBuffer: false
+      failureFileDescription: 下载失败数据
+      verifyDuplicateTask: true
+      maxParallelRunNum: 10
+      sheets:
+        - name: 已缴费数据
+          sheetIndex: 0
+          minRowLimit: 1
+          maxRowLimit: 10000
+          headRowNumber: 2
+          ormClass: com.example.model.BillData
+          columns:
+            - title: 楼栋
+              field: number
+              verifyExpression: "#notBlank(#val)"
+
+            - title: 单元
+              field: unit
+              verifyExpression: "#empty(#val) || #lengthLessThan(#val, 64)"
+
+            - title: 楼层
+              field: floor
+              verifyExpression: "#empty(#val) || #lengthLessThan(#val, 64)"
+
+            - title: 房号
+              field: houseNo
+              verifyExpression: "#empty(#val) || #lengthLessThan(#val, 64)"
+
+            - title: 交款状态
+              field: paymentStatus
+              verifyExpression: "#options(#val, '已交帐', '未交帐')"
+
+            - title: 科目名称
+              field: name
+              verifyExpression: "#notBlank(#val) && #lengthLessThan(#val, 64)"
+
+            - title: 单价
+              field: price
+              fieldType: double
+              verifyExpression: "#notBlank(#val) && #doubleWithScale(#val, 2) && #doubleGreaterThan(#val, 0)"
+              errorMessage: 单价必须是大于0的数字，最多保留2位小数
+
+            - title: 数量
+              field: numbers
+              fieldType: long
+              verifyExpression: "#notBlank(#val) && #longGreaterThanOrEquals(#val, 0)"
+
+            - title: 应收金额
+              field: billAmount
+              fieldType: double
+              verifyExpression: "#notBlank(#val) && #doubleWithScale(#val, 2)"
+
+            - title: 账期开始时间
+              field: billStartDate
+              verifyExpression: "#notBlank(#val) && #dateFormat(#val, 'yyyy/MM/dd')"
+              dateFormat: yyyy/MM/dd
+
+            - title: 账期结束时间
+              field: billEndDate
+              verifyExpression: "#notBlank(#val) && #dateFormat(#val, 'yyyy/MM/dd')"
+              dateFormat: yyyy/MM/dd
+
+# 支持的验证表达式:
+# - #notBlank(#val) : 非空
+# - #empty(#val) : 空值(允许为空)
+# - #lengthLessThan(#val, 64) : 长度小于64
+# - #lengthGreaterThan(#val, 5) : 长度大于5
+# - #lengthEquals(#val, 11) : 长度等于11
+# - #lengthBetween(#val, 5, 20) : 长度在5-20之间
+# - #options(#val, '选项1', '选项2') : 选项验证
+# - #dateFormat(#val, 'yyyy/MM/dd') : 日期格式验证
+# - #regex(#val, '^[a-zA-Z]+$') : 正则表达式验证
+# - #email(#val) : 邮箱格式验证
+# - #phone(#val) : 手机号验证(中国大陆)
+# - #idCard(#val) : 身份证号验证(中国大陆18位)
+# - #doubleWithScale(#val, 2) : 小数位数验证
+# - #doubleGreaterThan(#val, 0) : 大于(double)
+# - #doubleGreaterThanOrEquals(#val, 0) : 大于等于(double)
+# - #doubleLessThan(#val, 100) : 小于(double)
+# - #doubleBetween(#val, 0, 100) : 范围(double)
+# - #longGreaterThan(#val, 0) : 大于(long)
+# - #longGreaterThanOrEquals(#val, 0) : 大于等于(long)
+# - #longLessThan(#val, 100) : 小于(long)
+# - #longBetween(#val, 0, 100) : 范围(long)
+# - #intGreaterThan(#val, 0) : 大于(int)
+# - #intLessThan(#val, 100) : 小于(int)
+# - #intBetween(#val, 0, 100) : 范围(int)
+# 可以使用 && 和 || 组合多个表达式
