@@ -12,4 +12,6 @@ public interface ChapterMapper {
     List<Chapter> selectByNovelId(@Param("novelId") Long novelId);
 
     Chapter selectById(@Param("id") Long id);
+
+    int deleteByNovelId(@Param("novelId") Long novelId);
 }

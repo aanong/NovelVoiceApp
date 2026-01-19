@@ -65,4 +65,10 @@ public class NovelServiceImpl implements NovelService {
         BeanUtils.copyProperties(chapter, vo);
         return vo;
     }
+
+    @Override
+    public void deleteNovel(Long id) {
+        chapterMapper.deleteByNovelId(id);
+        novelMapper.deleteById(id);
+    }
 }

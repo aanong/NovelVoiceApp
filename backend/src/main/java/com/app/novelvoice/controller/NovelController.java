@@ -34,4 +34,9 @@ public class NovelController {
     public ChapterVO getChapterContent(@PathVariable Long id) {
         return novelService.getChapterContent(id);
     }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        novelService.deleteNovel(id);
+    }
 }

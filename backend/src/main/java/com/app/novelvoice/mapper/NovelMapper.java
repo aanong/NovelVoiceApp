@@ -11,4 +11,6 @@ public interface NovelMapper {
     List<Novel> selectAll();
 
     Novel selectById(Long id);
+
+    int deleteById(Long id);
 }

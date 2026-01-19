@@ -13,4 +13,8 @@
     <select id="selectById" resultType="com.app.novelvoice.entity.Novel">
         SELECT * FROM novels WHERE id = #{id}
     </select>
+
+    <delete id="deleteById" parameterType="Long">
+        DELETE FROM novels WHERE id = #{id}
+    </delete>
 </mapper>

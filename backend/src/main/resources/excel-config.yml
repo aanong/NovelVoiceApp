@@ -78,7 +78,7 @@ excel:
               field: email
               fieldType: string
               required: false
-              verifyExpression: "#empty(#val) || #isEmail(#val)"
+              verifyExpression: "#notBlank(#val) && #lengthLessThan(#val, 100)"
               errorMessage: 邮箱格式不正确
               width: 30
 
@@ -86,7 +86,7 @@ excel:
               field: phone
               fieldType: string
               required: false
-              verifyExpression: "#empty(#val) || #isPhone(#val)"
+              verifyExpression: "#notBlank(#val) && #lengthLessThan(#val, 100)"
               errorMessage: 手机号格式不正确
               width: 15
 

@@ -12,4 +12,6 @@ public interface NovelService {
     List<ChapterVO> getChapters(Long novelId);
 
     ChapterVO getChapterContent(Long id);
+
+    void deleteNovel(Long id);
 }
