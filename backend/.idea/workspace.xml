@@ -4,50 +4,33 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="31abf6c2-fe35-435a-bea7-4163e1efeeb7" name="Changes" comment="帮我优化项目，从用户登录注册，小说翻页，根据听小说进度定位小说位置，完善用户互相聊天功能，聊天添加表情，文件等发送功能">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/config/WebConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/controller/FileController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/controller/ReadingProgressController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/dto/PrivateMessageRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/dto/ReadingProgressRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/entity/Conversation.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/entity/ReadingProgress.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/mapper/ConversationMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/mapper/ReadingProgressMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/service/ReadingProgressService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/service/impl/ReadingProgressServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/vo/ConversationVO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/vo/ReadingProgressVO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/ConversationMapper.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/ReadingProgressMapper.xml" afterDir="false" />
+    <list default="true" id="31abf6c2-fe35-435a-bea7-4163e1efeeb7" name="Changes" comment="导入导出调整">
+      <change afterPath="$PROJECT_DIR$/../file-spring-boot-starter/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../file-spring-boot-starter/src/main/java/com/gmrfid/file/storage/FileStorageException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../file-spring-boot-starter/src/main/java/com/gmrfid/file/storage/FileStorageFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../file-spring-boot-starter/src/main/java/com/gmrfid/file/storage/FileStorageResult.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../file-spring-boot-starter/src/main/java/com/gmrfid/file/storage/FileStorageService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../file-spring-boot-starter/src/main/java/com/gmrfid/file/storage/FileStorageStrategy.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../file-spring-boot-starter/src/main/java/com/gmrfid/file/storage/config/FileStorageAutoConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../file-spring-boot-starter/src/main/java/com/gmrfid/file/storage/config/StorageProperties.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../file-spring-boot-starter/src/main/java/com/gmrfid/file/storage/impl/AliyunOssStorageStrategy.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../file-spring-boot-starter/src/main/java/com/gmrfid/file/storage/impl/LocalStorageStrategy.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../file-spring-boot-starter/src/main/java/com/gmrfid/file/storage/impl/MinioStorageStrategy.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../file-spring-boot-starter/src/main/resources/META-INF/spring.factories" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/controller/ChatController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/controller/ChatController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/entity/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/entity/Message.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/entity/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/mapper/MessageMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/mapper/MessageMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/mapper/UserMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/mapper/UserMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/netty/ChatHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/netty/ChatHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/service/ChatService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/service/ChatService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/service/impl/ChatServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/service/impl/ChatServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/service/impl/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/vo/MessageVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/vo/MessageVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/vo/UserVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/vo/UserVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/db/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/schema.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/MessageMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/MessageMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/UserMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/UserMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/proto/ChatMessage.proto" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/proto/ChatMessage.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/screens/ChatScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/screens/ChatScreen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/screens/LoginScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/screens/LoginScreen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/screens/NovelListScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/screens/NovelListScreen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/screens/NovelReaderScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/screens/NovelReaderScreen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/screens/RegisterScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/screens/RegisterScreen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/services/api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/services/api.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/NovelVoiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/NovelVoiceApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/controller/FileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/controller/FileController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/storage/FileStorageFactory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/storage/FileStorageResult.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/storage/FileStorageService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/storage/FileStorageStrategy.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/storage/config/StorageAutoConfiguration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/storage/config/StorageProperties.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/storage/impl/AliyunOssStorageStrategy.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/storage/impl/LocalStorageStrategy.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/novelvoice/storage/impl/MinioStorageStrategy.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,9 +46,9 @@
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
-        <option name="mavenHome" value="$PROJECT_DIR$/../../../software/apache-maven-3.6.3" />
+        <option name="mavenHome" value="$PROJECT_DIR$/../../../software/apache-maven-3.9.9" />
         <option name="useMavenConfig" value="true" />
-        <option name="userSettingsFile" value="D:\software\apache-maven-3.6.3\conf\settings.xml" />
+        <option name="userSettingsFile" value="D:\software\apache-maven-3.9.9\conf\aliyunsettings.xml" />
       </MavenGeneralSettings>
     </option>
   </component>
@@ -77,15 +60,20 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "D:/code/NovelVoiceApp/frontend",
+    "last_opened_file_path": "D:/code/NovelVoiceApp",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
-    "settings.editor.selected.configurable": "http.proxy",
+    "settings.editor.selected.configurable": "MavenSettings",
+    "spring.configuration.checksum": "e799630c798e91e0636843bfe1eb290c",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -106,8 +94,87 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1768454699375</updated>
-      <workItem from="1768454701647" duration="1322000" />
+      <workItem from="1768454701647" duration="2617000" />
+      <workItem from="1768460652465" duration="23592000" />
     </task>
+    <task id="LOCAL-00001" summary="帮我优化项目，从用户登录注册，小说翻页，根据听小说进度定位小说位置，完善用户互相聊天功能，聊天添加表情，文件等发送功能">
+      <created>1768456042090</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1768456042090</updated>
+    </task>
+    <task id="LOCAL-00002" summary="帮我优化项目，从用户登录注册，小说翻页，根据听小说进度定位小说位置，完善用户互相聊天功能，聊天添加表情，文件等发送功能">
+      <created>1768456677775</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1768456677776</updated>
+    </task>
+    <task id="LOCAL-00003" summary="帮我优化项目，从用户登录注册，小说翻页，根据听小说进度定位小说位置，完善用户互相聊天功能，聊天添加表情，文件等发送功能">
+      <created>1768457193440</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1768457193440</updated>
+    </task>
+    <task id="LOCAL-00004" summary="文件上传调整">
+      <created>1768461320248</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1768461320248</updated>
+    </task>
+    <task id="LOCAL-00005" summary="导入导出调整">
+      <created>1768464735648</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1768464735648</updated>
+    </task>
+    <task id="LOCAL-00006" summary="导入导出调整">
+      <created>1768553948254</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1768553948254</updated>
+    </task>
+    <task id="LOCAL-00007" summary="导入导出调整">
+      <created>1768554106305</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1768554106305</updated>
+    </task>
+    <task id="LOCAL-00008" summary="导入导出调整">
+      <created>1768554167577</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1768554167577</updated>
+    </task>
+    <task id="LOCAL-00009" summary="导入导出调整">
+      <created>1768557092917</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1768557092917</updated>
+    </task>
+    <task id="LOCAL-00010" summary="导入导出调整">
+      <created>1768558262900</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1768558262900</updated>
+    </task>
+    <task id="LOCAL-00011" summary="导入导出调整">
+      <created>1768558268679</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1768558268679</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -126,6 +193,24 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="帮我优化项目，从用户登录注册，小说翻页，根据听小说进度定位小说位置，完善用户互相聊天功能，聊天添加表情，文件等发送功能" />
-    <option name="LAST_COMMIT_MESSAGE" value="帮我优化项目，从用户登录注册，小说翻页，根据听小说进度定位小说位置，完善用户互相聊天功能，聊天添加表情，文件等发送功能" />
+    <MESSAGE value="文件上传调整" />
+    <MESSAGE value="导入导出调整" />
+    <option name="LAST_COMMIT_MESSAGE" value="导入导出调整" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/com/gmrfid/excel-spring-boot-starter/1.0.0/excel-spring-boot-starter-1.0.0-sources.jar!/com/gmrfid/excel/validator/ExcelValidatorFunctions.java</url>
+          <line>75</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/app/novelvoice/controller/ExcelController.java</url>
+          <line>75</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

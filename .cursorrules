@@ -1,0 +1,293 @@
+# NovelVoice App - Cursor Rules
+
+## 项目概述
+NovelVoice 是一个集成小说阅读、文本转语音(TTS)及实时聊天功能的移动端应用。
+采用前后端分离架构，后端基于 Spring Boot + Netty，前端基于 React Native。
+
+---
+
+## 技术栈规范
+
+### 后端 (backend/)
+- **框架**: Spring Boot 2.7.18
+- **语言**: Java 8 (JDK 1.8)
+- **持久层**: MyBatis + MySQL 5.7+
+- **实时通信**: Netty 4.1.x (WebSocket 协议)
+- **序列化**: Google Protobuf 3.21.12
+- **工具库**: Lombok, Maven
+- **包路径**: `com.app.novelvoice`
+
+### 前端 (frontend/)
+- **框架**: React Native 0.72.6
+- **语言**: TypeScript 4.8.4
+- **导航**: React Navigation 6.x (@react-navigation/native, @react-navigation/stack)
+- **网络请求**: Axios 1.6.x
+- **实时通信**: WebSocket + Protobufjs 8.x
+- **语音功能**: React Native TTS 4.x
+
+---
+
+## 代码规范
+
+### 通用规范
+1. 所有代码注释必须使用中文
+2. 变量、函数、类名使用英文，遵循驼峰命名法
+3. 常量使用全大写下划线分隔（如 `MAX_RETRY_COUNT`）
+4. 禁止使用 `any` 类型（TypeScript），除非确实无法推断类型
+5. 禁止在代码中硬编码敏感信息（数据库密码、API Key 等）
+
+### 后端 Java 规范
+
+#### 分层架构
+```
+controller/  -> RESTful API 控制器，只负责请求转发和响应
+service/     -> 业务逻辑层，接口 + 实现分离
+mapper/      -> MyBatis Mapper 接口
+entity/      -> 数据库实体类，对应表结构
+dto/         -> 请求传输对象，用于接收前端参数
+vo/          -> 视图对象，用于返回给前端的数据
+common/      -> 公共工具类、统一返回对象、全局异常处理
+netty/       -> Netty WebSocket 服务器相关代码
+util/        -> 工具类
+```
+
+#### API 返回格式
+所有 RESTful 接口必须返回统一的 `Result<T>` 对象：
+```java
+{
+    "code": 200,      // 状态码：200 成功，其他为错误码
+    "msg": "Success", // 提示信息
+    "data": {}        // 业务数据
+}
+```
+
+#### Entity 实体类规范
+- 必须继承 `BaseEntity` 基类
+- 使用 Lombok `@Data` 注解简化代码
+- 字段使用驼峰命名，MyBatis 自动映射下划线
+
+```java
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class Novel extends BaseEntity {
+    private Long id;
+    private String title;
+    // ... 其他字段
+}
+```
+
+#### MyBatis 规范
+- Mapper 接口必须添加 `@Mapper` 注解
+- XML 文件放置在 `resources/mapper/` 目录下
+- 必须使用 `#{}` 占位符防止 SQL 注入，禁止使用 `${}`
+- 查询方法命名：`selectXxx`、`selectByXxx`
+- 插入方法命名：`insert`、`insertBatch`
+- 更新方法命名：`update`、`updateByXxx`
+- 删除方法命名：`delete`、`deleteByXxx`
+
+#### Controller 规范
+- 使用 `@RestController` 注解
+- 路径统一以 `/api` 开头
+- 使用 `@GetMapping`、`@PostMapping` 等注解
+- 不在 Controller 中编写业务逻辑，仅负责参数校验和调用 Service
+
+#### Service 规范
+- 接口与实现分离（`XxxService` 接口 + `XxxServiceImpl` 实现类）
+- 实现类使用 `@Service` 注解
+- 事务方法使用 `@Transactional` 注解
+
+### 前端 TypeScript/React Native 规范
+
+#### 目录结构
+```
+src/
+├── screens/    -> 页面组件
+├── services/   -> API 请求和 WebSocket 服务
+├── navigation/ -> 路由配置
+├── proto/      -> Protobuf 定义和生成代码
+├── types/      -> TypeScript 类型定义
+└── components/ -> 可复用组件
+```
+
+#### 组件规范
+- 使用函数组件 + Hooks，禁止使用 Class 组件
+- 组件文件使用 PascalCase 命名（如 `LoginScreen.tsx`）
+- 每个屏幕组件放在 `screens/` 目录下
+- 可复用组件放在 `components/` 目录下
+
+```tsx
+import React, { useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+
+// 组件定义
+const ExampleScreen = ({ navigation }: any) => {
+    const [data, setData] = useState<string>('');
+    
+    return (
+        <View style={styles.container}>
+            <Text>{data}</Text>
+        </View>
+    );
+};
+
+// 样式定义在组件下方
+const styles = StyleSheet.create({
+    container: { flex: 1, padding: 20 },
+});
+
+export default ExampleScreen;
+```
+
+#### API 请求规范
+- 统一使用 `src/services/api.ts` 中的 axios 实例
+- 响应拦截器已处理统一返回格式，直接返回 `data` 部分
+- 错误处理使用 try-catch 包裹
+
+```tsx
+try {
+    const result = await api.get('/novels/list');
+    // result 已经是 data 部分
+} catch (error: any) {
+    Alert.alert('Error', error.message);
+}
+```
+
+#### 样式规范
+- 使用 `StyleSheet.create()` 创建样式对象
+- 样式对象定义在组件文件底部
+- 避免内联样式，除非是简单的单一属性
+
+---
+
+## 安全规范
+
+### 敏感信息管理
+1. 数据库密码通过环境变量 `DB_PASSWORD` 传入
+2. API Key 通过环境变量传入（如 `GEMINI_API_KEY`）
+3. 前端 API 地址配置在 `.env` 文件中，不提交到代码仓库
+
+### SQL 注入防护
+- MyBatis 中必须使用 `#{}` 参数占位符
+- 禁止拼接 SQL 字符串
+
+### 密码安全
+- 用户密码必须加密存储（使用 `PasswordUtil` 工具类）
+- 禁止明文传输和存储密码
+
+---
+
+## 实时通信规范
+
+### Netty WebSocket 服务
+- 默认端口：8081
+- 路径：`/ws`
+- 消息格式：Protobuf 二进制
+
+### Protobuf 定义
+- 定义文件位置：`backend/src/main/resources/proto/`
+- 前端生成代码位置：`frontend/src/proto/`
+
+---
+
+## 数据库规范
+
+### 表命名
+- 使用小写字母和下划线分隔（如 `novel_chapters`）
+- 表名使用复数形式
+
+### 字段命名
+- 使用小写字母和下划线分隔（如 `create_time`）
+- 主键统一命名为 `id`
+- 时间字段：`create_time`、`update_time`
+- 操作人字段：`create_by`、`update_by`
+
+### 字符集
+- 数据库和表使用 `utf8mb4` 字符集
+- 排序规则使用 `utf8mb4_general_ci`
+
+---
+
+## Git 提交规范
+
+### Commit Message 格式
+```
+<type>(<scope>): <subject>
+
+<body>
+```
+
+### Type 类型
+- `feat`: 新功能
+- `fix`: Bug 修复
+- `docs`: 文档更新
+- `style`: 代码格式调整（不影响逻辑）
+- `refactor`: 代码重构
+- `test`: 测试相关
+- `chore`: 构建/工具相关
+
+### 示例
+```
+feat(novel): 添加小说章节内容缓存功能
+
+- 实现 LRU 缓存策略
+- 缓存容量限制为 100 章
+```
+
+---
+
+## 开发环境配置
+
+### 后端
+- IDE: IntelliJ IDEA (推荐)
+- JDK: 1.8
+- Maven: 3.6+
+- MySQL: 5.7+
+
+### 前端
+- IDE: VS Code 或 Cursor (推荐)
+- Node.js: 16+
+- npm: 8+
+
+### 端口分配
+- Spring Boot HTTP 服务：8080
+- Netty WebSocket 服务：8081
+- Metro Bundler：8081 (开发时需避免冲突)
+
+---
+
+## 常用命令
+
+### 后端
+```bash
+# 编译并运行
+cd backend
+mvn clean spring-boot:run
+
+# 仅编译
+mvn clean compile
+```
+
+### 前端
+```bash
+# 安装依赖
+cd frontend
+npm install
+
+# 启动 Metro
+npm start
+
+# 运行 Android
+npm run android
+
+# 运行 iOS
+npm run ios
+```
+
+---
+
+## 注意事项
+
+1. 修改后端代码后需重启服务
+2. 修改 Protobuf 定义后需重新生成代码
+3. 真机调试时使用电脑内网 IP，不使用 localhost
+4. Android 模拟器使用 `10.0.2.2` 访问宿主机 localhost

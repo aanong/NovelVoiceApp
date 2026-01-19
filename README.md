@@ -11,6 +11,7 @@
 - [项目结构](#-项目结构)
 - [环境要求](#-环境要求)
 - [快速开始](#-快速开始)
+- [📚 详细使用教程](#-详细使用教程)
 - [配置说明](#-配置说明)
 - [API 接口](#-api-接口)
 - [数据库设计](#-数据库设计)
@@ -103,6 +104,13 @@
 
 ## 📁 项目结构
 
+### 模块概览
+- `backend`: 核心业务后端 (Spring Boot)
+- `frontend`: 移动端 APP (React Native)
+- `admin-web`: 管理后台前端 (React)
+- `excel-spring-boot-starter`: Excel 导入导出组件 (Starter)
+- `file-spring-boot-starter`: 文件存储组件 (Starter, 支持 Local/MinIO/OSS)
+
 ### 后端结构 (`/backend`)
 ```text
 src/main/java/com/app/novelvoice
@@ -138,6 +146,19 @@ src/
 │   └── index.ts    # 类型和常量
 └── App.tsx         # 主入口和路由配置
 ```
+
+### 管理后台结构 (`/admin-web`) [新增]
+```text
+src/
+├── layout/         # 布局组件（侧边栏、头部）
+├── pages/          # 页面组件
+│   ├── novel/      # 小说管理
+│   ├── system/     # 系统管理（角色、菜单）
+│   └── Login.tsx   # 登录页
+├── services/       # API 请求
+└── App.tsx         # 路由配置
+```
+
 
 ---
 
@@ -205,6 +226,23 @@ src/
 - `user_id`: 用户 ID（唯一）
 - `channel_id`: WebSocket 通道 ID
 - `last_active_time`: 最后活跃时间
+
+#### 权限管理表 (RBAC) [新增]
+
+**角色表 (`sys_role`)**:
+- `id`: 角色 ID
+- `role_name`: 角色名称
+- `role_key`: 角色权限标识
+
+**菜单表 (`sys_menu`)**:
+- `id`: 菜单 ID
+- `menu_name`: 菜单名称
+- `perms`: 权限标识
+- `component`: 组件路径
+
+**关联表**:
+- `sys_user_role`: 用户-角色关联
+- `sys_role_menu`: 角色-菜单关联
 
 ### 数据库初始化
 
@@ -338,6 +376,76 @@ cd NovelVoiceApp
    # iOS (需要 Xcode，仅 macOS)
    npm run ios
    ```
+
+### 第五步：管理后台启动
+
+1. **进入目录**:
+   ```bash
+   cd admin-web
+   ```
+
+2. **安装依赖**:
+   ```bash
+   npm install
+   ```
+
+3. **启动服务**:
+   ```bash
+   npm run dev
+   ```
+   访问地址: http://localhost:3000
+
+---
+
+## 📚 详细使用教程
+
+### 1. 小说内容管理指南
+小说内容可以通过以下三种方式导入：
+
+#### 方案 A：使用管理后台 (推荐)
+1. 启动 `admin-web` 并使用管理员账号登录。
+2. 进入“小说管理”模块。
+3. 点击“新增小说”上传封面图和填写基本信息。
+4. 在小说列表中点击“章节管理”，支持批量上传章节内容。
+
+#### 方案 B：Excel 批量导入
+1. 下载模板：访问 `http://localhost:8080/api/excel/template/novel_import` 下载 Excel 模板。
+2. 填写数据：按照模板格式填写小说标题、作者、简介等。
+3. 执行导入：使用 Postman 或 `curl` 发送 POST 请求到 `/api/excel/import`，参数 `taskType` 设为 `novel_import`。
+
+---
+
+### 2. 实时聊天系统使用教程
+
+#### 开发测试：
+1. 确保后端 8081 端口未被占用。
+2. 如果修改了 `ChatMessage.proto`，请务必执行：
+   ```bash
+   # 后端
+   mvn clean compile
+   # 前端
+   cd frontend && npx protobufjs-cli pbjs -t static-module -w es6 -o src/proto/ChatMessage.js ../backend/src/main/resources/proto/ChatMessage.proto
+   ```
+3. 前端启动后，点击“聊天”模块。系统会自动建立 WebSocket 连接。
+4. **私聊流程**：在用户列表中点击任意在线用户，即可发起一对一加密（Protobuf 序列化）聊天。
+
+---
+
+### 3. TTS 朗读功能配置
+
+#### 移动端配置：
+1. 确保手机/模拟器已安装语音引擎（如 Google 文本转语音）。
+2. 在 `NovelReaderScreen` 中点击底部的“朗读”按钮。
+3. 系统会自动同步朗读进度到后端，即使更换设备也能从中断处继续。
+
+---
+
+### 4. 文件存储切换指南
+
+如果您希望从本地存储切换到云存储（如阿里云 OSS）：
+1. 在 `application.yml` 中修改 `storage.type: aliyun-oss`。
+2. 填入您的 `access-key-id` 和 `bucket` 信息。
+3. 重启后端服务。系统将自动调用 `FileStorageFactory` 切换存储引擎，无需修改任何业务代码。
 
 ---
 

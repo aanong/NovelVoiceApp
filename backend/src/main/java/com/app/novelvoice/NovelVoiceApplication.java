@@ -6,6 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @MapperScan("com.app.novelvoice.mapper")
+@com.gmrfid.file.storage.annotation.EnableFileStorage
+@com.gmrfid.excel.annotation.EnableExcel
 public class NovelVoiceApplication {
 
     public static void main(String[] args) {

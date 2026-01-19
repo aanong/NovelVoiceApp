@@ -1,7 +1,7 @@
 package com.app.novelvoice.controller;
 
-import com.app.novelvoice.storage.FileStorageResult;
-import com.app.novelvoice.storage.FileStorageService;
+import com.gmrfid.file.storage.FileStorageResult;
+import com.gmrfid.file.storage.FileStorageService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,6 +29,7 @@ public class FileController {
     /**
      * 上传图片
      * 仅接受图片类型文件
+     * 
      * @param file 图片文件
      * @return 上传结果
      */
@@ -41,6 +42,7 @@ public class FileController {
     /**
      * 上传文件
      * 接受任意类型文件
+     * 
      * @param file 文件
      * @return 上传结果
      */
@@ -52,13 +54,14 @@ public class FileController {
 
     /**
      * 上传文件到指定子目录
-     * @param file 文件
+     * 
+     * @param file   文件
      * @param subDir 子目录名称（如：avatars、covers、chat-images等）
      * @return 上传结果
      */
     @PostMapping("/upload/{subDir}")
     public Map<String, Object> uploadToDir(@RequestParam("file") MultipartFile file,
-                                           @PathVariable("subDir") String subDir) {
+            @PathVariable("subDir") String subDir) {
         FileStorageResult result = storageService.upload(file, subDir);
         return buildResponse(result);
     }
@@ -66,15 +69,16 @@ public class FileController {
     /**
      * 上传文件（通用接口）
      * 支持指定存储类型和子目录
-     * @param file 文件
-     * @param subDir 子目录（默认files）
+     * 
+     * @param file        文件
+     * @param subDir      子目录（默认files）
      * @param storageType 存储类型（local/minio/aliyun-oss，可选）
      * @return 上传结果
      */
     @PostMapping("/upload")
     public Map<String, Object> upload(@RequestParam("file") MultipartFile file,
-                                      @RequestParam(value = "subDir", defaultValue = "files") String subDir,
-                                      @RequestParam(value = "storageType", required = false) String storageType) {
+            @RequestParam(value = "subDir", defaultValue = "files") String subDir,
+            @RequestParam(value = "storageType", required = false) String storageType) {
         FileStorageResult result;
         if (storageType != null && !storageType.isEmpty()) {
             result = storageService.upload(file, subDir, storageType);
@@ -86,6 +90,7 @@ public class FileController {
 
     /**
      * 删除文件
+     * 
      * @param fileKey 文件Key（存储路径）
      * @return 删除结果
      */
@@ -101,13 +106,14 @@ public class FileController {
     /**
      * 获取文件预签名URL
      * 用于临时访问私有文件
-     * @param fileKey 文件Key
+     * 
+     * @param fileKey       文件Key
      * @param expireSeconds 过期时间（秒），默认3600秒
      * @return 预签名URL
      */
     @GetMapping("/presigned-url")
     public Map<String, Object> getPresignedUrl(@RequestParam("fileKey") String fileKey,
-                                               @RequestParam(value = "expireSeconds", defaultValue = "3600") int expireSeconds) {
+            @RequestParam(value = "expireSeconds", defaultValue = "3600") int expireSeconds) {
         String url = storageService.getPresignedUrl(fileKey, expireSeconds);
         Map<String, Object> response = new HashMap<>();
         response.put("url", url);
@@ -118,6 +124,7 @@ public class FileController {
 
     /**
      * 检查文件是否存在
+     * 
      * @param fileKey 文件Key
      * @return 是否存在
      */
@@ -132,6 +139,7 @@ public class FileController {
 
     /**
      * 获取存储信息
+     * 
      * @return 当前存储类型和可用存储类型
      */
     @GetMapping("/storage-info")
@@ -144,6 +152,7 @@ public class FileController {
 
     /**
      * 构建响应结果
+     * 
      * @param result 存储结果
      * @return 响应Map
      */
